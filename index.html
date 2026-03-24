@@ -1,975 +1,141 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#1A1A1F">
-<title>SafeFood Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-<style>
-:root{
-  --bg:#1A1A1F;
-  --bg2:#141418;
-  --surface:#222228;
-  --card:#2A2A32;
-  --card2:#323240;
-  --border:rgba(255,255,255,0.06);
-  --border2:rgba(255,255,255,0.1);
-  --green:#00D68F;
-  --green-dim:rgba(0,214,143,0.12);
-  --yellow:#FFB830;
-  --yellow-dim:rgba(255,184,48,0.12);
-  --red:#FF4757;
-  --red-dim:rgba(255,71,87,0.12);
-  --orange:#FF6B35;
-  --orange-dim:rgba(255,107,53,0.12);
-  --blue:#4ECDC4;
-  --text:#EAEAF0;
-  --text2:#A0A0B0;
-  --text3:#6B6B80;
-  --accent:#7C6FEA;
-  --accent-dim:rgba(124,111,234,0.15);
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;}
-body{
-  font-family:'Space Grotesk',sans-serif;
-  background:var(--bg2);
-  color:var(--text);
-  min-height:100vh;
-  min-height:-webkit-fill-available;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SafeFood Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <style>
+        :root {
+            --bg: #1A1A1F; --bg2: #141418; --surface: #222228; --card: #2A2A32;
+            --green: #00D68F; --red: #FF4757; --yellow: #FFB830; --orange: #FF6B35;
+            --text: #EAEAF0; --text2: #A0A0B0; --text3: #6B6B80; --accent: #7C6FEA;
+            --border: rgba(255,255,255,0.06);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Space Grotesk', sans-serif; background: var(--bg2); color: var(--text); }
+        .app { max-width: 430px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { background: var(--bg); padding: 40px 20px 15px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .logo-text { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; }
+        .logo-text .safe { color: var(--green); }
+        
+        .tabs { display: flex; background: var(--bg); border-bottom: 1px solid var(--border); }
+        .tab { flex: 1; padding: 15px; font-size: 0.7rem; font-weight: 700; color: var(--text3); background: none; border: none; cursor: pointer; text-transform: uppercase; }
+        .tab.active { color: var(--green); border-bottom: 2px solid var(--green); }
 
-.app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);}
+        .content { padding: 16px; flex: 1; }
+        .search-card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 15px; }
+        .barcode-row { display: flex; gap: 8px; margin-bottom: 12px; }
+        .barcode-input { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; outline: none; }
+        .search-go { background: var(--green); color: #000; border: none; border-radius: 10px; padding: 0 20px; font-weight: 700; }
+        
+        .cam-btn { width: 100%; background: var(--surface); border: 1px solid var(--green); border-radius: 12px; padding: 15px; color: var(--green); font-weight: 600; cursor: pointer; }
 
-/* HEADER */
-header{
-  background:var(--bg);
-  padding:54px 20px 18px;
-  border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:100;
-  backdrop-filter:blur(20px);
-}
-.header-inner{display:flex;align-items:center;justify-content:space-between;}
-.logo-area{display:flex;align-items:center;gap:10px;}
-.logo-icon{
-  width:38px;height:38px;border-radius:10px;
-  background:linear-gradient(135deg,#00D68F20,#7C6FEA20);
-  border:1px solid rgba(0,214,143,0.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;
-}
-.logo-text{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;letter-spacing:-0.5px;}
-.logo-text .safe{color:var(--green);}
-.logo-text .food{color:var(--text);}
-.logo-sub{font-size:0.58rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:1px;}
-.lang-btn{
-  background:var(--card);border:1px solid var(--border2);
-  border-radius:8px;padding:6px 10px;
-  font-family:'Space Mono',monospace;font-size:0.68rem;
-  color:var(--text2);cursor:pointer;
-}
+        /* Stil pentru zona de camera */
+        #scanner-container { display: none; width: 100%; border-radius: 15px; overflow: hidden; position: relative; background: #000; margin-bottom: 15px; }
+        #scanner-container video { width: 100%; height: auto; }
+        .scan-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; height: 40%; border: 2px solid var(--green); border-radius: 10px; box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); pointer-events: none; }
+        .stop-btn { position: absolute; top: 10px; right: 10px; background: var(--red); color: #fff; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; z-index: 10; }
 
-/* TABS */
-.tabs{
-  display:flex;background:var(--bg);
-  border-bottom:1px solid var(--border);
-  padding:0 20px;gap:0;
-}
-.tab{
-  flex:1;padding:12px 4px;
-  font-family:'Space Grotesk',sans-serif;font-size:0.65rem;font-weight:600;
-  text-transform:uppercase;letter-spacing:1px;
-  color:var(--text3);background:none;border:none;cursor:pointer;
-  border-bottom:2px solid transparent;transition:all 0.2s;
-}
-.tab.active{color:var(--green);border-bottom-color:var(--green);}
-
-/* CONTENT */
-.content{flex:1;padding:16px;overflow-y:auto;}
-.panel{display:none;}.panel.active{display:block;animation:fadeUp 0.2s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-
-/* SEARCH AREA */
-.search-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;padding:16px;margin-bottom:12px;
-}
-.section-label{
-  font-size:0.6rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:2px;color:var(--text3);margin-bottom:10px;
-}
-.barcode-row{display:flex;gap:8px;margin-bottom:10px;}
-.barcode-input{
-  flex:1;background:var(--bg);
-  border:1px solid var(--border2);border-radius:10px;
-  padding:13px 14px;font-family:'Space Mono',monospace;
-  font-size:0.95rem;color:var(--text);outline:none;
-  transition:border-color 0.2s;letter-spacing:1px;
-}
-.barcode-input:focus{border-color:var(--green);}
-.barcode-input::placeholder{color:var(--text3);font-size:0.8rem;letter-spacing:0;}
-.search-go{
-  background:var(--green);color:#0A0A0F;
-  border:none;border-radius:10px;padding:13px 16px;
-  font-family:'Space Grotesk',sans-serif;font-size:0.85rem;font-weight:700;
-  cursor:pointer;white-space:nowrap;transition:opacity 0.2s;
-}
-.search-go:active{opacity:0.8;}
-.divider-or{
-  display:flex;align-items:center;gap:10px;
-  margin:10px 0;
-  font-size:0.65rem;color:var(--text3);letter-spacing:2px;
-}
-.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--border);}
-.cam-btn{
-  width:100%;background:var(--bg);
-  border:1px solid var(--border2);border-radius:12px;
-  padding:13px;font-family:'Space Grotesk',sans-serif;
-  font-size:0.82rem;font-weight:600;color:var(--text2);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:border-color 0.2s,color 0.2s;
-}
-.cam-btn:hover{border-color:var(--green);color:var(--green);}
-
-/* CAMERA */
-#scanner-container{
-  display:none;
-  background:#000;border-radius:14px;overflow:hidden;
-  margin-bottom:12px;position:relative;
-}
-#scanner-container video{width:100%;display:block;}
-.scanner-overlay{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  pointer-events:none;
-}
-.scan-frame{
-  width:200px;height:120px;
-  border:2px solid var(--green);
-  border-radius:8px;
-  box-shadow:0 0 0 1000px rgba(0,0,0,0.5);
-}
-.scanner-hint{
-  position:absolute;bottom:12px;left:0;right:0;
-  text-align:center;font-size:0.72rem;color:#fff;
-  background:rgba(0,0,0,0.5);padding:6px;
-}
-.stop-scan{
-  position:absolute;top:10px;right:10px;
-  background:rgba(255,71,87,0.9);color:#fff;
-  border:none;border-radius:8px;padding:6px 12px;
-  font-size:0.75rem;font-weight:600;cursor:pointer;
-  font-family:'Space Grotesk',sans-serif;
-}
-
-/* RESULT */
-.result-wrap{display:none;margin-top:4px;}
-
-.prod-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:16px;padding:16px;margin-bottom:10px;
-}
-.prod-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
-.prod-img{
-  width:56px;height:56px;border-radius:10px;
-  background:var(--bg);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.6rem;flex-shrink:0;overflow:hidden;
-}
-.prod-img img{width:100%;height:100%;object-fit:cover;}
-.prod-name{font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:4px;}
-.prod-brand{font-size:0.72rem;color:var(--text3);}
-.prod-qty{font-size:0.7rem;color:var(--text3);margin-top:2px;}
-.prod-nutri{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:0.62rem;font-weight:700;padding:3px 8px;
-  border-radius:6px;margin-top:6px;text-transform:uppercase;letter-spacing:1px;
-}
-
-/* SCORE */
-.score-row{
-  display:flex;align-items:center;gap:14px;
-  background:var(--bg);border-radius:12px;padding:14px;
-  margin-bottom:10px;
-}
-.score-badge{
-  width:54px;height:54px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;
-  flex-shrink:0;
-}
-.grade-A{background:rgba(0,214,143,0.15);color:var(--green);border:1.5px solid var(--green);}
-.grade-B{background:rgba(0,214,143,0.1);color:#00b87a;border:1.5px solid #00b87a;}
-.grade-C{background:rgba(255,184,48,0.15);color:var(--yellow);border:1.5px solid var(--yellow);}
-.grade-D{background:rgba(255,107,53,0.15);color:var(--orange);border:1.5px solid var(--orange);}
-.grade-E{background:rgba(255,71,87,0.15);color:var(--red);border:1.5px solid var(--red);}
-.score-details h3{font-size:0.95rem;font-weight:700;margin-bottom:4px;}
-.score-details p{font-size:0.72rem;color:var(--text2);line-height:1.4;}
-.score-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
-.pill{font-size:0.6rem;font-weight:600;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;}
-.pill-red{background:var(--red-dim);color:var(--red);}
-.pill-yellow{background:var(--yellow-dim);color:var(--yellow);}
-.pill-green{background:var(--green-dim);color:var(--green);}
-.pill-orange{background:var(--orange-dim);color:var(--orange);}
-
-/* WARNINGS */
-.warnings-section{margin-bottom:10px;}
-.warn-title{
-  font-size:0.6rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:2px;color:var(--text3);margin-bottom:8px;
-  display:flex;align-items:center;gap:6px;
-}
-.warn-item{
-  border-radius:12px;padding:12px 14px;margin-bottom:7px;
-  display:flex;gap:10px;align-items:flex-start;
-  border-left:3px solid transparent;
-}
-.warn-item.danger{background:var(--red-dim);border-left-color:var(--red);}
-.warn-item.caution{background:var(--yellow-dim);border-left-color:var(--yellow);}
-.warn-item.safe{background:var(--green-dim);border-left-color:var(--green);}
-.warn-item.info{background:var(--orange-dim);border-left-color:var(--orange);}
-.warn-code{
-  font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;
-  min-width:52px;padding-top:1px;flex-shrink:0;
-}
-.danger .warn-code{color:var(--red);}
-.caution .warn-code{color:var(--yellow);}
-.safe .warn-code{color:var(--green);}
-.info .warn-code{color:var(--orange);}
-.warn-body h4{font-size:0.82rem;font-weight:600;margin-bottom:3px;}
-.warn-body p{font-size:0.7rem;color:var(--text2);line-height:1.5;}
-.warn-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
-.warn-tag{font-size:0.58rem;padding:2px 6px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
-.danger .warn-tag{background:rgba(255,71,87,0.2);color:var(--red);}
-.caution .warn-tag{background:rgba(255,184,48,0.2);color:var(--yellow);}
-.safe .warn-tag{background:rgba(0,214,143,0.2);color:var(--green);}
-.info .warn-tag{background:rgba(255,107,53,0.2);color:var(--orange);}
-
-/* NUTRIENTS */
-.nut-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-.nut-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
-.nut-label{font-size:0.58rem;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px;}
-.nut-val{font-family:'Space Mono',monospace;font-size:0.95rem;color:var(--text);}
-.nut-warn{font-size:0.62rem;margin-top:3px;font-weight:600;}
-.nut-warn.high{color:var(--red);}
-.nut-warn.medium{color:var(--yellow);}
-.nut-warn.low{color:var(--green);}
-
-/* INGREDIENTS */
-.ing-box{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:12px;padding:14px;margin-bottom:10px;
-  font-size:0.75rem;line-height:1.8;color:var(--text2);
-}
-.ing-danger{color:var(--red);font-weight:700;}
-.ing-caution{color:var(--yellow);font-weight:600;}
-
-/* DATABASE */
-.db-top{margin-bottom:14px;}
-.db-search-input{
-  width:100%;background:var(--card);border:1px solid var(--border2);
-  border-radius:12px;padding:13px 16px;
-  font-family:'Space Grotesk',sans-serif;font-size:0.9rem;
-  color:var(--text);outline:none;margin-bottom:10px;-webkit-appearance:none;
-}
-.db-search-input:focus{border-color:var(--green);}
-.db-search-input::placeholder{color:var(--text3);}
-.filter-scroll{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
-.filter-scroll::-webkit-scrollbar{display:none;}
-.fbtn{
-  padding:7px 13px;border-radius:20px;white-space:nowrap;
-  font-size:0.65rem;font-weight:600;cursor:pointer;
-  border:1px solid var(--border);background:var(--card);color:var(--text3);
-  transition:all 0.15s;font-family:'Space Grotesk',sans-serif;
-}
-.fbtn.f-all{background:var(--accent-dim);color:var(--accent);border-color:var(--accent);}
-.fbtn.f-danger{background:var(--red-dim);color:var(--red);border-color:var(--red);}
-.fbtn.f-caution{background:var(--yellow-dim);color:var(--yellow);border-color:var(--yellow);}
-.fbtn.f-safe{background:var(--green-dim);color:var(--green);border-color:var(--green);}
-
-.db-item{
-  background:var(--card);border-radius:12px;padding:12px 14px;
-  margin-bottom:7px;display:flex;gap:10px;align-items:flex-start;
-  border-left:3px solid transparent;
-}
-.db-item.danger{border-left-color:var(--red);}
-.db-item.caution{border-left-color:var(--yellow);}
-.db-item.safe{border-left-color:var(--green);}
-.db-code{
-  font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;
-  min-width:60px;padding-top:2px;flex-shrink:0;
-}
-.danger .db-code{color:var(--red);}
-.caution .db-code{color:var(--yellow);}
-.safe .db-code{color:var(--green);}
-.db-info h4{font-size:0.82rem;font-weight:600;margin-bottom:3px;}
-.db-info p{font-size:0.7rem;color:var(--text2);line-height:1.5;}
-.db-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
-.db-tag{font-size:0.58rem;padding:2px 6px;border-radius:4px;font-weight:600;text-transform:uppercase;}
-.danger .db-tag{background:rgba(255,71,87,0.15);color:var(--red);}
-.caution .db-tag{background:rgba(255,184,48,0.15);color:var(--yellow);}
-.safe .db-tag{background:rgba(0,214,143,0.15);color:var(--green);}
-
-/* STATES */
-.loading-state{text-align:center;padding:40px 20px;color:var(--text3);}
-.load-icon{font-size:2rem;animation:spin 1s linear infinite;display:block;margin-bottom:12px;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.error-state{
-  background:var(--red-dim);border:1px solid rgba(255,71,87,0.3);
-  border-radius:12px;padding:16px;text-align:center;
-  color:var(--red);font-size:0.82rem;line-height:1.6;
-}
-.empty-state{text-align:center;padding:30px;color:var(--text3);font-size:0.82rem;}
-
-/* SUGAR METER */
-.sugar-meter{
-  background:var(--bg);border-radius:10px;padding:10px 12px;
-  margin-top:6px;
-}
-.sugar-bar-bg{height:6px;background:var(--border);border-radius:3px;margin:6px 0;}
-.sugar-bar-fill{height:100%;border-radius:3px;transition:width 0.5s ease;}
-.sugar-labels{display:flex;justify-content:space-between;font-size:0.58rem;color:var(--text3);}
-
-/* NUTRISCORE COLORS */
-.ns-a{background:rgba(0,214,143,0.15);color:var(--green);}
-.ns-b{background:rgba(0,214,143,0.1);color:#00b87a;}
-.ns-c{background:rgba(255,184,48,0.15);color:var(--yellow);}
-.ns-d{background:rgba(255,107,53,0.15);color:var(--orange);}
-.ns-e{background:rgba(255,71,87,0.15);color:var(--red);}
-</style>
+        .result-card { background: var(--card); border-radius: 16px; padding: 20px; margin-top: 15px; border: 1px solid var(--border); }
+        .grade-badge { display: inline-block; padding: 10px 20px; border-radius: 10px; font-size: 2rem; font-weight: 900; margin-bottom: 10px; }
+        .grade-a { background: var(--green); color: #000; }
+        .grade-e { background: var(--red); color: #fff; }
+        .loading { text-align: center; padding: 20px; color: var(--green); }
+    </style>
 </head>
 <body>
+
 <div class="app">
+    <header>
+        <div class="logo-text"><span class="safe">Safe</span>Food Pro</div>
+    </header>
 
-<header>
-  <div class="header-inner">
-    <div class="logo-area">
-      <div class="logo-icon">🛡️</div>
-      <div>
-        <div class="logo-text"><span class="safe">Safe</span><span class="food">Food</span> <span style="color:var(--accent)">Pro</span></div>
-        <div class="logo-sub" id="header-sub">Siguranța Alimentară</div>
-      </div>
-    </div>
-    <button class="lang-btn" onclick="cycleLang()">🌐 <span id="lang-indicator">RO</span></button>
-  </div>
-</header>
-
-<div class="tabs">
-  <button class="tab active" onclick="showTab('scanner')" id="tab-btn-scanner">Scanner</button>
-  <button class="tab" onclick="showTab('database')" id="tab-btn-database">Bază Date</button>
-  <button class="tab" onclick="showTab('info')" id="tab-btn-info">Ghid</button>
-</div>
-
-<div class="content">
-
-  <!-- ===== SCANNER ===== -->
-  <div class="panel active" id="tab-scanner">
-
-    <div class="search-card">
-      <div class="section-label" id="lbl-search">🔍 Caută produs</div>
-      <div class="barcode-row">
-        <input class="barcode-input" id="main-input" placeholder="Cod bare sau nume produs..." inputmode="text"
-          onkeydown="if(event.key==='Enter') doSearch()">
-        <button class="search-go" onclick="doSearch()" id="btn-search">GO</button>
-      </div>
-      <div class="divider-or" id="lbl-or">SAU</div>
-      <button class="cam-btn" onclick="toggleCamera()" id="btn-camera">
-        <span>📷</span> <span id="lbl-scan">Scanează cod de bare cu camera</span>
-      </button>
+    <div class="tabs">
+        <button class="tab active">Scanner</button>
+        <button class="tab">Bază Date</button>
     </div>
 
-    <div id="scanner-container">
-      <div id="scanner-video-area"></div>
-      <div class="scanner-overlay">
-        <div class="scan-frame"></div>
-      </div>
-      <div class="scanner-hint" id="lbl-scan-hint">Poziționează codul de bare în cadru</div>
-      <button class="stop-scan" onclick="stopCamera()" id="btn-stop">✕ Stop</button>
+    <div class="content">
+        <div class="search-card">
+            <div class="barcode-row">
+                <input type="text" id="manual-input" class="barcode-input" placeholder="Cod bare (ex: 5449000000996)">
+                <button class="search-go" onclick="runSearch(document.getElementById('manual-input').value)">GO</button>
+            </div>
+            <button class="cam-btn" onclick="startScanner()">📷 SCANEAZĂ COD DE BARE</button>
+        </div>
+
+        <div id="scanner-container">
+            <button class="stop-btn" onclick="stopScanner()">STOP</button>
+            <div id="interactive" class="viewport"></div>
+            <div class="scan-overlay"></div>
+        </div>
+
+        <div id="result-area"></div>
     </div>
-
-    <div class="result-wrap" id="result-wrap">
-      <div id="result-content"></div>
-    </div>
-
-  </div>
-
-  <!-- ===== DATABASE ===== -->
-  <div class="panel" id="tab-database">
-    <div class="db-top">
-      <input class="db-search-input" id="db-search" placeholder="Caută E-uri, ftalați, substanțe..." oninput="renderDB()">
-      <div class="filter-scroll">
-        <button class="fbtn f-all" onclick="setDBFilter('all',this)" id="fb-all">Toate</button>
-        <button class="fbtn" onclick="setDBFilter('danger',this)" id="fb-danger">🚫 Periculoase</button>
-        <button class="fbtn" onclick="setDBFilter('caution',this)" id="fb-caution">⚠️ Discutabile</button>
-        <button class="fbtn" onclick="setDBFilter('safe',this)" id="fb-safe">✅ Sigure</button>
-        <button class="fbtn" onclick="setDBFilter('e',this)" id="fb-e">E-uri</button>
-        <button class="fbtn" onclick="setDBFilter('fthalat',this)" id="fb-f">Ftalați</button>
-        <button class="fbtn" onclick="setDBFilter('metal',this)" id="fb-m">Metale</button>
-        <button class="fbtn" onclick="setDBFilter('sugar',this)" id="fb-s">Zahăr/Grăsimi</button>
-      </div>
-    </div>
-    <div id="db-list"></div>
-  </div>
-
-  <!-- ===== INFO ===== -->
-  <div class="panel" id="tab-info">
-    <div id="info-content"></div>
-  </div>
-
-</div>
 </div>
 
 <script>
-// ===== LANGUAGES =====
-const langs = ['RO','EN','FR','DE','ES'];
-let langIdx = 0;
-const T = {
-  RO:{
-    headerSub:'Siguranța Alimentară',
-    tabScanner:'Scanner',tabDB:'Bază Date',tabInfo:'Ghid',
-    search:'Caută produs',or:'SAU',
-    scan:'Scanează cod de bare cu camera',
-    scanHint:'Poziționează codul de bare în cadru',
-    stop:'Stop',loading:'Se analizează produsul...',
-    notFound:'Produsul nu a fost găsit. Încearcă un alt termen sau cod de bare.',
-    connErr:'Eroare de conexiune. Verifică internetul.',
-    score:'Scor Siguranță',
-    additives:'Aditivi & Substanțe Detectate',
-    nutrients:'Valori Nutriționale (100g)',
-    ingredients:'Lista Ingrediente',
-    gradeA:'Excelent — Fără substanțe problematice',
-    gradeB:'Bun — Aditivi discutabili minori',
-    gradeC:'Acceptabil — Consum moderat recomandat',
-    gradeD:'Problematic — Conține substanțe periculoase',
-    gradeE:'Periculos — Evitat recomandat',
-    sugarLow:'Zahăr scăzut',sugarMed:'Zahăr moderat',sugarHigh:'Zahăr ridicat',sugarVHigh:'Zahăr foarte ridicat',
-    saltLow:'Sare scăzută',saltHigh:'Sare ridicată',
-    fatLow:'Grăsimi scăzute',fatHigh:'Grăsimi ridicate',
-    satFatHigh:'Grăsimi saturate ridicate',
-  },
-  EN:{
-    headerSub:'Food Safety',
-    tabScanner:'Scanner',tabDB:'Database',tabInfo:'Guide',
-    search:'Search product',or:'OR',
-    scan:'Scan barcode with camera',
-    scanHint:'Position barcode in frame',
-    stop:'Stop',loading:'Analyzing product...',
-    notFound:'Product not found. Try another term or barcode.',
-    connErr:'Connection error. Check your internet.',
-    score:'Safety Score',
-    additives:'Detected Additives & Substances',
-    nutrients:'Nutritional Values (100g)',
-    ingredients:'Ingredients List',
-    gradeA:'Excellent — No problematic substances',
-    gradeB:'Good — Minor questionable additives',
-    gradeC:'Acceptable — Moderate consumption recommended',
-    gradeD:'Problematic — Contains dangerous substances',
-    gradeE:'Dangerous — Avoidance recommended',
-    sugarLow:'Low sugar',sugarMed:'Moderate sugar',sugarHigh:'High sugar',sugarVHigh:'Very high sugar',
-    saltLow:'Low salt',saltHigh:'High salt',
-    fatLow:'Low fat',fatHigh:'High fat',
-    satFatHigh:'High saturated fat',
-  },
-  FR:{
-    headerSub:'Sécurité Alimentaire',
-    tabScanner:'Scanner',tabDB:'Base de données',tabInfo:'Guide',
-    search:'Rechercher produit',or:'OU',
-    scan:'Scanner le code-barres',
-    scanHint:'Positionnez le code-barres dans le cadre',
-    stop:'Arrêt',loading:'Analyse en cours...',
-    notFound:'Produit non trouvé.',
-    connErr:'Erreur de connexion.',
-    score:'Score de sécurité',
-    additives:'Additifs & substances détectés',
-    nutrients:'Valeurs nutritionnelles (100g)',
-    ingredients:'Liste des ingrédients',
-    gradeA:'Excellent — Sans substances problématiques',
-    gradeB:'Bon — Additifs discutables mineurs',
-    gradeC:'Acceptable — Consommation modérée recommandée',
-    gradeD:'Problématique — Contient des substances dangereuses',
-    gradeE:'Dangereux — Évitement recommandé',
-    sugarLow:'Sucre faible',sugarMed:'Sucre modéré',sugarHigh:'Sucre élevé',sugarVHigh:'Sucre très élevé',
-    saltLow:'Sel faible',saltHigh:'Sel élevé',
-    fatLow:'Graisses faibles',fatHigh:'Graisses élevées',
-    satFatHigh:'Graisses saturées élevées',
-  },
-  DE:{
-    headerSub:'Lebensmittelsicherheit',
-    tabScanner:'Scanner',tabDB:'Datenbank',tabInfo:'Leitfaden',
-    search:'Produkt suchen',or:'ODER',
-    scan:'Barcode mit Kamera scannen',
-    scanHint:'Barcode im Rahmen positionieren',
-    stop:'Stopp',loading:'Produkt wird analysiert...',
-    notFound:'Produkt nicht gefunden.',
-    connErr:'Verbindungsfehler.',
-    score:'Sicherheitsbewertung',
-    additives:'Erkannte Zusatzstoffe',
-    nutrients:'Nährwerte (100g)',
-    ingredients:'Zutaten',
-    gradeA:'Ausgezeichnet — Keine problematischen Stoffe',
-    gradeB:'Gut — Geringfügige Zusatzstoffe',
-    gradeC:'Akzeptabel — Mäßiger Konsum empfohlen',
-    gradeD:'Problematisch — Enthält gefährliche Stoffe',
-    gradeE:'Gefährlich — Vermeidung empfohlen',
-    sugarLow:'Wenig Zucker',sugarMed:'Mäßig Zucker',sugarHigh:'Viel Zucker',sugarVHigh:'Sehr viel Zucker',
-    saltLow:'Wenig Salz',saltHigh:'Viel Salz',
-    fatLow:'Wenig Fett',fatHigh:'Viel Fett',
-    satFatHigh:'Viel gesättigte Fettsäuren',
-  },
-  ES:{
-    headerSub:'Seguridad Alimentaria',
-    tabScanner:'Escáner',tabDB:'Base de datos',tabInfo:'Guía',
-    search:'Buscar producto',or:'O',
-    scan:'Escanear código de barras',
-    scanHint:'Posicione el código en el marco',
-    stop:'Parar',loading:'Analizando producto...',
-    notFound:'Producto no encontrado.',
-    connErr:'Error de conexión.',
-    score:'Puntuación de seguridad',
-    additives:'Aditivos y sustancias detectadas',
-    nutrients:'Valores nutricionales (100g)',
-    ingredients:'Lista de ingredientes',
-    gradeA:'Excelente — Sin sustancias problemáticas',
-    gradeB:'Bueno — Aditivos cuestionables menores',
-    gradeC:'Aceptable — Consumo moderado recomendado',
-    gradeD:'Problemático — Contiene sustancias peligrosas',
-    gradeE:'Peligroso — Se recomienda evitar',
-    sugarLow:'Azúcar bajo',sugarMed:'Azúcar moderado',sugarHigh:'Azúcar alto',sugarVHigh:'Azúcar muy alto',
-    saltLow:'Sal baja',saltHigh:'Sal alta',
-    fatLow:'Grasa baja',fatHigh:'Grasa alta',
-    satFatHigh:'Grasa saturada alta',
-  }
-};
+    // Configurare Scanner
+    function startScanner() {
+        document.getElementById('scanner-container').style.display = 'block';
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: document.querySelector('#interactive'),
+                constraints: { facingMode: "environment" }
+            },
+            decoder: { readers: ["ean_reader", "ean_8_reader", "upc_reader"] }
+        }, function(err) {
+            if (err) { alert("Eroare camera: " + err); return; }
+            Quagga.start();
+        });
 
-function t(key){ return (T[langs[langIdx]]||T.RO)[key]||key; }
-
-function cycleLang(){
-  langIdx=(langIdx+1)%langs.length;
-  document.getElementById('lang-indicator').textContent=langs[langIdx];
-  applyLang();
-}
-
-function applyLang(){
-  document.getElementById('header-sub').textContent=t('headerSub');
-  document.getElementById('tab-btn-scanner').textContent=t('tabScanner');
-  document.getElementById('tab-btn-database').textContent=t('tabDB');
-  document.getElementById('tab-btn-info').textContent=t('tabInfo');
-  document.getElementById('lbl-search').innerHTML='🔍 '+t('search');
-  document.getElementById('lbl-or').textContent=t('or');
-  document.getElementById('lbl-scan').textContent=t('scan');
-  document.getElementById('lbl-scan-hint').textContent=t('scanHint');
-  document.getElementById('btn-stop').innerHTML='✕ '+t('stop');
-  document.getElementById('main-input').placeholder=t('search')+'...';
-  renderInfo();
-}
-
-// ===== DATABASE =====
-const DB = [
-  // E-URI COLORANTI
-  {code:'E100',name:'Curcumina',cat:'Colorant',safety:'safe',type:'e',desc:'Colorant natural din turmeric. Antioxidant puternic.',tags:['Natural','Antioxidant']},
-  {code:'E101',name:'Riboflavina (B2)',cat:'Colorant',safety:'safe',type:'e',desc:'Vitamina B2. Colorant galben esențial pentru organism.',tags:['Vitamina','Natural']},
-  {code:'E102',name:'Tartrazina',cat:'Colorant',safety:'danger',type:'e',desc:'Colorant sintetic galben. Hiperactivitate la copii, alergii, posibil cancerigen. Interzis în mai multe țări.',tags:['Sintetic','Hiperactivitate','Alergen','ADHD']},
-  {code:'E104',name:'Galben de chinolina',cat:'Colorant',safety:'caution',type:'e',desc:'Colorant sintetic galben-verde. Interzis în SUA și Australia.',tags:['Sintetic','Interzis SUA']},
-  {code:'E110',name:'Sunset Yellow FCF',cat:'Colorant',safety:'danger',type:'e',desc:'Colorant portocaliu sintetic. Hiperactivitate, alergii, probleme renale.',tags:['Sintetic','Hiperactivitate','Rinichi']},
-  {code:'E120',name:'Carmin (Cochineal)',cat:'Colorant',safety:'caution',type:'e',desc:'Colorant roșu din insecte. Alergii severe, anafilaxie posibilă.',tags:['Insecte','Alergen','Anafilaxie']},
-  {code:'E122',name:'Azorubina',cat:'Colorant',safety:'danger',type:'e',desc:'Colorant roșu sintetic. Hiperactivitate. Interzis în SUA, Canada, Japonia.',tags:['Sintetic','Interzis SUA','Hiperactivitate']},
-  {code:'E123',name:'Amarant',cat:'Colorant',safety:'danger',type:'e',desc:'Colorant roșu. Cancerigen în studii animale. Interzis în SUA din 1976.',tags:['Sintetic','Cancerigen','Interzis SUA']},
-  {code:'E124',name:'Roșu Ponceau 4R',cat:'Colorant',safety:'danger',type:'e',desc:'Colorant roșu sintetic. Posibil cancerigen, interzis în SUA și Norvegia.',tags:['Sintetic','Cancerigen']},
-  {code:'E127',name:'Eritrozina',cat:'Colorant',safety:'danger',type:'e',desc:'Colorant roz sintetic. Perturbator tiroidian, posibil cancerigen.',tags:['Sintetic','Tiroid','Cancerigen']},
-  {code:'E129',name:'Roșu Allura AC',cat:'Colorant',safety:'caution',type:'e',desc:'Colorant roșu sintetic. Hiperactivitate în combinații.',tags:['Sintetic','Hiperactivitate']},
-  {code:'E131',name:'Albastru Patent V',cat:'Colorant',safety:'danger',type:'e',desc:'Colorant albastru sintetic. Alergii severe. Interzis în SUA.',tags:['Sintetic','Alergen','Interzis SUA']},
-  {code:'E150d',name:'Caramel sulfit-amoniacal',cat:'Colorant',safety:'caution',type:'e',desc:'Caramel chimic (în Cola). Conține 4-MEI posibil cancerigen.',tags:['Cola','4-MEI','Posibil cancerigen']},
-  {code:'E171',name:'Dioxid de titan',cat:'Colorant',safety:'danger',type:'e',desc:'INTERZIS în UE din 2022! Nanoparticule cancerigene, toxic celular.',tags:['INTERZIS UE 2022','Nanoparticule','Cancerigen']},
-
-  // CONSERVANTI
-  {code:'E200',name:'Acid sorbic',cat:'Conservant',safety:'safe',type:'e',desc:'Conservant natural din fructe. Sigur și eficient.',tags:['Natural']},
-  {code:'E202',name:'Sorbat de potasiu',cat:'Conservant',safety:'safe',type:'e',desc:'Conservant larg utilizat. Sigur în cantitățile normale.',tags:['Sigur']},
-  {code:'E210',name:'Acid benzoic',cat:'Conservant',safety:'caution',type:'e',desc:'Cu vitamina C (E300) formează benzen cancerigen.',tags:['Benzen cu E300','Sintetic']},
-  {code:'E211',name:'Benzoat de sodiu',cat:'Conservant',safety:'caution',type:'e',desc:'Frecvent în băuturi. Cu E300 → benzen cancerigen. Hiperactivitate.',tags:['Benzen','Hiperactivitate','Băuturi']},
-  {code:'E220',name:'Dioxid de sulf',cat:'Conservant',safety:'caution',type:'e',desc:'Vin, fructe uscate. Alergic pentru astmatici. Migrene.',tags:['Alergen','Astm','Migrene','Vin']},
-  {code:'E249',name:'Nitrit de potasiu',cat:'Conservant',safety:'danger',type:'e',desc:'Mezeluri. Nitrozamine cancerigene la temperaturi înalte.',tags:['Cancerigen','Mezeluri','Nitrozamine']},
-  {code:'E250',name:'Nitrit de sodiu',cat:'Conservant',safety:'danger',type:'e',desc:'Cel mai periculos conservant în mezeluri. Nitrozamine cancerigene.',tags:['Cancerigen','Mezeluri','Nitrozamine','Frecvent']},
-  {code:'E251',name:'Nitrat de sodiu',cat:'Conservant',safety:'danger',type:'e',desc:'Carne procesată. Transformat în nitriți cancerigeni.',tags:['Cancerigen','Carne procesată']},
-  {code:'E252',name:'Nitrat de potasiu',cat:'Conservant',safety:'danger',type:'e',desc:'Conservant tradițional în mezeluri. Cancerigen prin nitrozamine.',tags:['Cancerigen','Mezeluri']},
-
-  // ANTIOXIDANTI
-  {code:'E300',name:'Acid ascorbic (Vit. C)',cat:'Antioxidant',safety:'safe',type:'e',desc:'Vitamina C. Complet sigur și benefic.',tags:['Vitamina C','Natural','Benefic']},
-  {code:'E306',name:'Tocoferoli (Vit. E)',cat:'Antioxidant',safety:'safe',type:'e',desc:'Vitamina E. Antioxidant esențial pentru organism.',tags:['Vitamina E','Natural']},
-  {code:'E320',name:'BHA',cat:'Antioxidant',safety:'danger',type:'e',desc:'Antioxidant sintetic în grăsimi. Posibil cancerigen. Perturbator endocrin. Interzis în Japonia.',tags:['Sintetic','Cancerigen','Endocrin','Interzis Japonia']},
-  {code:'E321',name:'BHT',cat:'Antioxidant',safety:'caution',type:'e',desc:'Antioxidant sintetic controversat. Posibil cancerigen în doze mari.',tags:['Sintetic','Controversat']},
-
-  // EMULGATORI
-  {code:'E322',name:'Lecitine',cat:'Emulgator',safety:'safe',type:'e',desc:'Emulgator natural din soia sau ouă. Sigur.',tags:['Natural','Soia']},
-  {code:'E407',name:'Caragenan',cat:'Stabilizator',safety:'caution',type:'e',desc:'Extras din alge. Inflamații intestinale în consum regulat.',tags:['Alge','Inflamații intestinale']},
-  {code:'E433',name:'Polisorbat 80',cat:'Emulgator',safety:'caution',type:'e',desc:'Perturbă microbiomul intestinal. Inflamații.',tags:['Microbiom','Inflamații','Sintetic']},
-  {code:'E451',name:'Trifosfați',cat:'Stabilizator',safety:'caution',type:'e',desc:'Mezeluri și brânzeturi procesate. Perturbă absorbția calciului.',tags:['Calciu','Mezeluri']},
-  {code:'E471',name:'Mono- și digliceride',cat:'Emulgator',safety:'caution',type:'e',desc:'Pot conține grăsimi trans. Sursa poate fi animală sau din ulei de palmier.',tags:['Grăsimi trans','Palmier']},
-
-  // INDULCITORI
-  {code:'E950',name:'Acesulfam K',cat:'Îndulcitor',safety:'caution',type:'e',desc:'Îndulcitor sintetic 200x mai dulce ca zahărul. Studii contradictorii.',tags:['Sintetic','Controversat']},
-  {code:'E951',name:'Aspartam',cat:'Îndulcitor',safety:'danger',type:'e',desc:'IARC 2023: posibil cancerigen. Periculos pentru fenilcetonurici (PKU). Perturbator neurologic.',tags:['IARC 2023','Cancerigen','PKU','Neurologic']},
-  {code:'E952',name:'Ciclamat',cat:'Îndulcitor',safety:'danger',type:'e',desc:'Posibil cancerigen. INTERZIS în SUA și UK.',tags:['Cancerigen','Interzis SUA','Interzis UK']},
-  {code:'E954',name:'Zaharina',cat:'Îndulcitor',safety:'caution',type:'e',desc:'Primul îndulcitor artificial. Studii vechi: cancer vezică la șobolani.',tags:['Sintetic','Controversat']},
-  {code:'E955',name:'Sucraloza',cat:'Îndulcitor',safety:'caution',type:'e',desc:'Perturbă microbiomul intestinal. Posibil cancerigen conform studii recente.',tags:['Sintetic','Microbiom','Studii recente']},
-  {code:'E960',name:'Stevia',cat:'Îndulcitor',safety:'safe',type:'e',desc:'Îndulcitor natural din planta Stevia. Sigur.',tags:['Natural','Stevia']},
-  {code:'E961',name:'Neotam',cat:'Îndulcitor',safety:'caution',type:'e',desc:'Derivat aspartam ultra-potent. Date pe termen lung insuficiente.',tags:['Sintetic','Aspartam derivat']},
-
-  // ACIDIFIANTI
-  {code:'E330',name:'Acid citric',cat:'Acidifiant',safety:'safe',type:'e',desc:'Acid natural din citrice. Complet sigur.',tags:['Natural','Citrice']},
-  {code:'E338',name:'Acid fosforic',cat:'Acidifiant',safety:'caution',type:'e',desc:'În Cola. Demineralizează oasele, distruge smalțul dentar.',tags:['Cola','Oase','Dinți']},
-  {code:'E621',name:'Glutamat monosodic (MSG)',cat:'Potențiator',safety:'caution',type:'e',desc:'Cefalee, greață la persoane sensibile. "Sindromul restaurantului chinezesc".',tags:['MSG','Cefalee','Sensibilitate']},
-
-  // FTALATI
-  {code:'DEHP',name:'DEHP (Di(2-etilhexil)ftalat)',cat:'Ftalat',safety:'danger',type:'fthalat',desc:'Plastifiant în ambalaje. Perturbator endocrin puternic. Afectează fertilitatea, dezvoltarea fetală. INTERZIS în jucării UE.',tags:['Plastifiant','Endocrin','Fertilitate','Cancerigen','SVHC']},
-  {code:'DBP',name:'DBP (Dibutil ftalat)',cat:'Ftalat',safety:'danger',type:'fthalat',desc:'Ftalat în lacuri, adezivi, ambalaje. Toxic pentru reproducere. SVHC conform REACH.',tags:['Endocrin','Reproducere','SVHC','REACH']},
-  {code:'BBP',name:'BBP (Benzilbutil ftalat)',cat:'Ftalat',safety:'danger',type:'fthalat',desc:'Ftalat în PVC alimentar. Perturbator endocrin, toxic pentru reproducere.',tags:['PVC','Endocrin','Reproducere']},
-  {code:'DIBP',name:'DIBP (Diisobutil ftalat)',cat:'Ftalat',safety:'danger',type:'fthalat',desc:'Ftalat în ambalaje flexibile. Toxic pentru reproducere, perturbator endocrin.',tags:['Endocrin','Reproducere']},
-  {code:'DEP',name:'DEP (Dietil ftalat)',cat:'Ftalat',safety:'caution',type:'fthalat',desc:'Ftalat cu toxicitate mai redusă față de DEHP. Prezent în cosmetice și ambalaje.',tags:['Plastifiant','Cosmetice']},
-  {code:'DINP',name:'DINP (Diizononil ftalat)',cat:'Ftalat',safety:'caution',type:'fthalat',desc:'Ftalat industrial. Efecte endocrine posibile la expunere prelungită.',tags:['Industrial','Posibil endocrin']},
-
-  // METALE GRELE
-  {code:'Pb',name:'Plumb (Lead)',cat:'Metal greu',safety:'danger',type:'metal',desc:'Neurotoxic puternic. Nu există nivel sigur. Afectează creierul copiilor. Contaminant în sol, apă, ambalaje vechi.',tags:['Neurotoxic','Copii','Nu există nivel sigur']},
-  {code:'Hg',name:'Mercur (Mercury)',cat:'Metal greu',safety:'danger',type:'metal',desc:'Extrem de toxic. Prezent în pește (ton, rechin). Neurotoxic, toxic pentru rinichi.',tags:['Neurotoxic','Pește','Rinichi','Fetal']},
-  {code:'Cd',name:'Cadmiu (Cadmium)',cat:'Metal greu',safety:'danger',type:'metal',desc:'Cancerigen grupa 1 IARC. Acumulare în rinichi și oase. Prezent în cereale, legume.',tags:['Cancerigen IARC','Rinichi','Oase','Cereale']},
-  {code:'As',name:'Arsenic (Arsenic)',cat:'Metal greu',safety:'danger',type:'metal',desc:'Cancerigen puternic. Prezent în orez, apă de puț. Toxic pentru ficat, rinichi.',tags:['Cancerigen','Orez','Ficat']},
-  {code:'Al',name:'Aluminiu (Aluminium)',cat:'Metal greu',safety:'caution',type:'metal',desc:'Neurotoxic în doze mari. Asociat cu Alzheimer. Prezent în unele aditivi alimentari.',tags:['Neurologic','Alzheimer','Aditivi']},
-
-  // ZAHAR SI GRASIMI
-  {code:'HFCS',name:'Sirop de porumb bogat în fructoză',cat:'Zahăr adăugat',safety:'danger',type:'sugar',desc:'Îndulcitor ultra-procesat. Obezitate, diabet tip 2, ficat gras non-alcoolic, inflamații sistemice.',tags:['Obezitate','Diabet','Ficat gras','Ultra-procesat']},
-  {code:'TRANS',name:'Grăsimi trans (parțial hidrogenate)',cat:'Grăsimi',safety:'danger',type:'sugar',desc:'Cele mai periculoase grăsimi. Boli cardiovasculare, cancer, diabet. INTERZISE în SUA din 2018.',tags:['Cardiovascular','Cancerigen','Interzis SUA 2018','Hidrogenate']},
-  {code:'PALMFAT',name:'Ulei de palmier',cat:'Grăsimi',safety:'caution',type:'sugar',desc:'Bogat în grăsimi saturate. Procesul de rafinare produce MCPD și glicidol, posibil cancerigeni.',tags:['Saturate','MCPD','Glicidol','Defrișare']},
-  {code:'FRUCTOSE',name:'Fructoză adăugată',cat:'Zahăr adăugat',safety:'caution',type:'sugar',desc:'Metabolizată exclusiv hepatic. Ficat gras, rezistență la insulină în exces.',tags:['Ficat','Insulină','Zahăr ascuns']},
-  {code:'SATFAT',name:'Grăsimi saturate excesive',cat:'Grăsimi',safety:'caution',type:'sugar',desc:'Risc cardiovascular crescut la consum ridicat (>10% din calorii zilnice).',tags:['Cardiovascular','Colesterol']},
-  {code:'SODIUM',name:'Sodiu/Sare excesivă',cat:'Sodiu',safety:'caution',type:'sugar',desc:'Hipertensiune, boli renale, retenție de apă la consum >5g/zi.',tags:['Hipertensiune','Rinichi','Retenție']},
-
-  // PESTICIDE / ALTI CONTAMINANTI
-  {code:'ACRYLAMIDE',name:'Acrilamidă',cat:'Contaminant',safety:'danger',type:'metal',desc:'Se formează la coacerea/prăjirea amidonului la >120°C. Posibil cancerigen IARC grupa 2A. Prezent în chips, biscuiți.',tags:['Cancerigen IARC 2A','Prăjit','Chips','Biscuiți']},
-  {code:'BPA',name:'Bisfenol A (BPA)',cat:'Plastifiant',safety:'danger',type:'fthalat',desc:'Perturbator endocrin puternic din ambalaje plastice. Mimează estrogenii. INTERZIS în recipiente pentru copii UE.',tags:['Endocrin','Estrogen','Plastic','INTERZIS copii UE']},
-  {code:'BPS',name:'Bisfenol S (BPS)',cat:'Plastifiant',safety:'danger',type:'fthalat',desc:'Înlocuitor BPA cu efecte similare sau mai grave. Perturbator endocrin.',tags:['Endocrin','Înlocuitor BPA']},
-  {code:'PAH',name:'Hidrocarburi aromatice policiclice',cat:'Contaminant',safety:'danger',type:'metal',desc:'Formate la afumare/grilare. Cancerigene IARC grupa 1. Prezente în carne afumată.',tags:['Cancerigen IARC 1','Afumat','Grilat']},
-  {code:'FURAN',name:'Furani',cat:'Contaminant',safety:'danger',type:'metal',desc:'Formați în alimente conservate termic (cafea, conserve). Hepatotoxic, posibil cancerigen.',tags:['Cancerigen','Cafea','Conserve','Hepatotoxic']},
-  {code:'DIOXIN',name:'Dioxine și furani clorurați',cat:'Contaminant',safety:'danger',type:'metal',desc:'Extrem de toxice. Acumulare în grăsimea animală. Cancerigene, perturbatori endocrini.',tags:['Cancerigen IARC 1','Endocrin','Grăsime animală']},
-];
-
-let dbFilter = 'all';
-function setDBFilter(f, btn){
-  dbFilter = f;
-  document.querySelectorAll('.fbtn').forEach(b=>{b.className='fbtn';});
-  btn.className = 'fbtn f-'+f;
-  renderDB();
-}
-
-function renderDB(){
-  const q = (document.getElementById('db-search')?.value||'').toLowerCase();
-  let items = [...DB];
-  if(dbFilter==='danger') items=items.filter(i=>i.safety==='danger');
-  else if(dbFilter==='caution') items=items.filter(i=>i.safety==='caution');
-  else if(dbFilter==='safe') items=items.filter(i=>i.safety==='safe');
-  else if(dbFilter==='e') items=items.filter(i=>i.type==='e');
-  else if(dbFilter==='fthalat') items=items.filter(i=>i.type==='fthalat');
-  else if(dbFilter==='metal') items=items.filter(i=>i.type==='metal');
-  else if(dbFilter==='sugar') items=items.filter(i=>i.type==='sugar');
-
-  if(q) items=items.filter(i=>
-    i.code.toLowerCase().includes(q)||
-    i.name.toLowerCase().includes(q)||
-    i.desc.toLowerCase().includes(q)||
-    i.cat.toLowerCase().includes(q)||
-    i.tags.some(t=>t.toLowerCase().includes(q))
-  );
-
-  const el = document.getElementById('db-list');
-  if(!items.length){el.innerHTML='<div class="empty-state">🔍 Niciun rezultat</div>';return;}
-  el.innerHTML = items.map(i=>`
-    <div class="db-item ${i.safety}">
-      <div class="db-code">${i.code}</div>
-      <div class="db-info">
-        <h4>${i.name}</h4>
-        <p>${i.desc}</p>
-        <div class="db-tags">
-          <span class="db-tag">${i.cat}</span>
-          ${i.tags.map(t=>`<span class="db-tag">${t}</span>`).join('')}
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-// ===== SCANNER =====
-let scannerActive = false;
-
-function showTab(name){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  document.getElementById('tab-btn-'+name).classList.add('active');
-  if(name==='database') renderDB();
-  if(name==='info') renderInfo();
-}
-
-function toggleCamera(){
-  if(scannerActive){stopCamera();return;}
-  const container = document.getElementById('scanner-container');
-  container.style.display = 'block';
-  scannerActive = true;
-
-  Quagga.init({
-    inputStream:{
-      name:'Live',type:'LiveStream',
-      target:document.getElementById('scanner-video-area'),
-      constraints:{facingMode:'environment',width:{min:640},height:{min:480}},
-    },
-    locator:{patchSize:'medium',halfSample:true},
-    numOfWorkers:2,
-    frequency:10,
-    decoder:{readers:['ean_reader','ean_8_reader','upc_reader','upc_e_reader','code_128_reader']},
-    locate:true
-  }, function(err){
-    if(err){
-      alert('Camera nu poate fi accesată. Verifică permisiunile.');
-      stopCamera(); return;
-    }
-    Quagga.start();
-  });
-
-  Quagga.onDetected(function(result){
-    const code = result.codeResult.code;
-    if(code){
-      document.getElementById('main-input').value = code;
-      stopCamera();
-      doSearch();
-    }
-  });
-}
-
-function stopCamera(){
-  scannerActive = false;
-  try{Quagga.stop();}catch(e){}
-  document.getElementById('scanner-container').style.display = 'none';
-  document.getElementById('scanner-video-area').innerHTML = '';
-}
-
-async function doSearch(){
-  const q = document.getElementById('main-input').value.trim();
-  if(!q) return;
-  stopCamera();
-
-  const wrap = document.getElementById('result-wrap');
-  const content = document.getElementById('result-content');
-  wrap.style.display = 'block';
-  content.innerHTML = `<div class="loading-state"><span class="load-icon">⏳</span>${t('loading')}</div>`;
-
-  try{
-    let url, data, product;
-    if(/^\d{8,14}$/.test(q)){
-      // Cod de bare
-      url = `https://world.openfoodfacts.org/api/v0/product/${q}.json`;
-      data = await(await fetch(url)).json();
-      product = data.product;
-    } else {
-      // Cautare text
-      const lang = langs[langIdx].toLowerCase();
-      url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=1`;
-      data = await(await fetch(url)).json();
-      product = data.products?.[0];
+        Quagga.onDetected(function(data) {
+            let code = data.codeResult.code;
+            stopScanner();
+            runSearch(code);
+        });
     }
 
-    if(!product){ content.innerHTML=`<div class="error-state">🔍 ${t('notFound')}</div>`; return; }
-    renderProduct(product);
-  } catch(e){
-    content.innerHTML = `<div class="error-state">❌ ${t('connErr')}</div>`;
-  }
-}
+    function stopScanner() {
+        Quagga.stop();
+        document.getElementById('scanner-container').style.display = 'none';
+    }
 
-function renderProduct(p){
-  const name = p.product_name || p.product_name_en || p.product_name_ro || 'Produs necunoscut';
-  const brand = p.brands || '';
-  const qty = p.quantity || '';
-  const ingText = p.ingredients_text || p.ingredients_text_en || p.ingredients_text_ro || p.ingredients_text_fr || p.ingredients_text_de || p.ingredients_text_es || '';
-  const nut = p.nutriments || {};
-  const nutriScore = p.nutrition_grades || p.nutriscore_grade || '';
-  const imgUrl = p.image_front_small_url || p.image_url || '';
+    // Căutare în OpenFoodFacts
+    async function runSearch(code) {
+        if(!code) return;
+        const resArea = document.getElementById('result-area');
+        resArea.innerHTML = '<div class="loading">Se caută produsul...</div>';
 
-  // Detectam E-uri
-  const eReg = /E\s?\d{3,4}[a-z]?/gi;
-  const foundCodes = [...new Set((ingText.match(eReg)||[]).map(e=>e.replace(/\s/g,'').toUpperCase()))];
+        try {
+            const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
+            const data = await response.json();
 
-  // Detectam HFCS, trans, etc din ingrediente
-  const extraDetect = [];
-  if(/sirop.*porumb|fructose.*corn|high.fructose|HFCS/i.test(ingText)) extraDetect.push('HFCS');
-  if(/hidrogenat|hydrogenated|trans fat/i.test(ingText)) extraDetect.push('TRANS');
-  if(/ulei.*palm|palm.*oil|palm.*fat/i.test(ingText)) extraDetect.push('PALMFAT');
-  if(/fructoz[aă]|fructose/i.test(ingText)) extraDetect.push('FRUCTOSE');
-  if(/glutamat|monosodium glutamate|MSG/i.test(ingText)) extraDetect.push('E621');
-  if(/aspartam|aspartame/i.test(ingText)) extraDetect.push('E951');
-  if(/nitrit|nitriti|sodium nitrite|nitrite/i.test(ingText)) extraDetect.push('E250');
-  if(/benzoat|benzoate/i.test(ingText)) extraDetect.push('E211');
-
-  // Toate codurile gasite
-  const allCodes = [...new Set([...foundCodes, ...extraDetect])];
-  const matched = allCodes.map(code=>{
-    return DB.find(d=>d.code.toUpperCase()===code.toUpperCase()) ||
-      {code,name:'Aditiv necunoscut',cat:'Necunoscut',safety:'caution',desc:'Nu avem informații în baza de date.',tags:['Necunoscut'],type:'e'};
-  });
-
-  // Sugar analysis
-  const sugar100 = nut['sugars_100g'];
-  let sugarLevel='', sugarColor='', sugarWidth=0;
-  if(sugar100 !== undefined){
-    if(sugar100 < 5){sugarLevel=t('sugarLow');sugarColor='var(--green)';sugarWidth=Math.round(sugar100/5*25);}
-    else if(sugar100 < 12.5){sugarLevel=t('sugarMed');sugarColor='var(--yellow)';sugarWidth=Math.round(25+(sugar100-5)/7.5*25);}
-    else if(sugar100 < 22.5){sugarLevel=t('sugarHigh');sugarColor='var(--orange)';sugarWidth=Math.round(50+(sugar100-12.5)/10*25);}
-    else{sugarLevel=t('sugarVHigh');sugarColor='var(--red)';sugarWidth=Math.min(100,Math.round(75+(sugar100-22.5)/22.5*25));}
-  }
-
-  const salt100 = nut['salt_100g'];
-  let saltWarn='';
-  if(salt100>1.5) saltWarn=`<div class="nut-warn high">⚠️ ${t('saltHigh')} (${salt100}g)</div>`;
-  else if(salt100!==undefined) saltWarn=`<div class="nut-warn low">✅ ${t('saltLow')}</div>`;
-
-  const fat100 = nut['fat_100g'];
-  let fatWarn='';
-  if(fat100>20) fatWarn=`<div class="nut-warn high">⚠️ ${t('fatHigh')} (${fat100}g)</div>`;
-
-  const satfat100 = nut['saturated-fat_100g'];
-  let satFatWarn='';
-  if(satfat100>5) satFatWarn=`<div class="nut-warn high">⚠️ ${t('satFatHigh')} (${satfat100}g)</div>`;
-
-  // Score calc
-  const dangers = matched.filter(m=>m.safety==='danger').length;
-  const cautions = matched.filter(m=>m.safety==='caution').length;
-  let grade, gradeLabel;
-  const sugarPenalty = sugar100>22.5?1:sugar100>12.5?0.5:0;
-  const saltPenalty = salt100>1.5?0.5:0;
-  const totalScore = dangers + cautions*0.4 + sugarPenalty + saltPenalty;
-
-  if(totalScore===0){grade='A';gradeLabel=t('gradeA');}
-  else if(totalScore<0.8){grade='B';gradeLabel=t('gradeB');}
-  else if(totalScore<2){grade='C';gradeLabel=t('gradeC');}
-  else if(totalScore<4){grade='D';gradeLabel=t('gradeD');}
-  else{grade='E';gradeLabel=t('gradeE');}
-
-  // Highlight ingrediente
-  let ingHL = ingText;
-  allCodes.forEach(code=>{
-    const found = DB.find(d=>d.code.toUpperCase()===code);
-    const cls = found?.safety==='danger'?'ing-danger':found?.safety==='caution'?'ing-caution':'';
-    if(cls) ingHL = ingHL.replace(new RegExp(code,'gi'),`<span class="${cls}">${code}</span>`);
-  });
-
-  // Nutriscore badge
-  const nsMap = {a:'ns-a',b:'ns-b',c:'ns-c',d:'ns-d',e:'ns-e'};
-  const nsClass = nsMap[nutriScore?.toLowerCase()] || '';
-  const nsBadge = nutriScore ? `<span class="prod-nutri ${nsClass}">Nutri-Score ${nutriScore.toUpperCase()}</span>` : '';
-
-  const html = `
-  <div class="prod-card">
-    <div class="prod-top">
-      <div class="prod-img">${imgUrl?`<img src="${imgUrl}" alt="">` : '🛒'}</div>
-      <div>
-        <div class="prod-name">${name}</div>
-        ${brand?`<div class="prod-brand">${brand}</div>`:''}
-        ${qty?`<div class="prod-qty">${qty}</div>`:''}
-        ${nsBadge}
-      </div>
-    </div>
-
-    <div class="score-row">
-      <div class="score-badge grade-${grade}">${grade}</div>
-      <div class="score-details">
-        <h3>${t('score')}: ${grade}</h3>
-        <p>${gradeLabel}</p>
-        <div class="score-pills">
-          ${dangers>0?`<span class="pill pill-red">🚫 ${dangers} periculoase</span>`:''}
-          ${cautions>0?`<span class="pill pill-yellow">⚠️ ${cautions} discutabile</span>`:''}
-          ${sugar100>12.5?`<span class="pill pill-orange">🍬 ${sugarLevel}</span>`:''}
-          ${salt100>1.5?`<span class="pill pill-orange">🧂 ${t('saltHigh')}</span>`:''}
-          ${dangers===0&&cautions===0&&(sugar100||0)<12.5?`<span class="pill pill-green">✅ Sigur</span>`:''}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  ${matched.length>0?`
-  <div class="warn-title">🧪 ${t('additives')} (${matched.length})</div>
-  <div class="warnings-section">
-    ${matched.map(m=>`
-    <div class="warn-item ${m.safety}">
-      <div class="warn-code">${m.code}</div>
-      <div class="warn-body">
-        <h4>${m.name}</h4>
-        <p>${m.desc}</p>
-        <div class="warn-tags">${m.tags.map(tg=>`<span class="warn-tag">${tg}</span>`).join('')}</div>
-      </div>
-    </div>`).join('')}
-  </div>`:''}
-
-  <div class="warn-title">📊 ${t('nutrients')}</div>
-  <div class="nut-grid">
-    ${nut['energy-kcal_100g']!==undefined?`<div class="nut-card"><div class="nut-label">Energie</div><div class="nut-val">${Math.round(nut['energy-kcal_100g'])} kcal</div></div>`:''}
-    ${sugar100!==undefined?`<div class="nut-card"><div class="nut-label">Zahăr</div><div class="nut-val">${sugar100}g</div>
-      ${sugar100>0?`<div class="sugar-meter"><div class="sugar-bar-bg"><div class="sugar-bar-fill" style="width:${sugarWidth}%;background:${sugarColor}"></div></div></div>`:''}
-      <div class="nut-warn ${sugar100>22.5?'high':sugar100>12.5?'medium':'low'}">${sugarLevel}</div>
-    </div>`:''}
-    ${fat100!==undefined?`<div class="nut-card"><div class="nut-label">Grăsimi</div><div class="nut-val">${fat100}g</div>${fatWarn}</div>`:''}
-    ${satfat100!==undefined?`<div class="nut-card"><div class="nut-label">Grăsimi saturate</div><div class="nut-val">${satfat100}g</div>${satFatWarn}</div>`:''}
-    ${nut['proteins_100g']!==undefined?`<div class="nut-card"><div class="nut-label">Proteine</div><div class="nut-val">${nut['proteins_100g']}g</div></div>`:''}
-    ${salt100!==undefined?`<div class="nut-card"><div class="nut-label">Sare</div><div class="nut-val">${salt100}g</div>${saltWarn}</div>`:''}
-    ${nut['fiber_100g']!==undefined?`<div class="nut-card"><div class="nut-label">Fibre</div><div class="nut-val">${nut['fiber_100g']}g</div></div>`:''}
-    ${nut['carbohydrates_100g']!==undefined?`<div class="nut-card"><div class="nut-label">Carbohidrați</div><div class="nut-val">${nut['carbohydrates_100g']}g</div></div>`:''}
-  </div>
-
-  ${ingText?`
-  <div class="warn-title">📋 ${t('ingredients')}</div>
-  <div class="ing-box">${ingHL||ingText}</div>`:''}
-  `;
-
-  document.getElementById('result-content').innerHTML = html;
-  document.getElementById('result-wrap').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-// ===== INFO =====
-function renderInfo(){
-  document.getElementById('info-content').innerHTML = `
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;">
-    <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-bottom:10px;">🛡️ Ghid SafeFood Pro</div>
-    <div style="font-size:0.82rem;color:var(--text2);line-height:1.8;">
-      <p style="margin-bottom:8px">Această aplicație analizează produsele alimentare după <strong style="color:var(--text)">codul de bare</strong> sau <strong style="color:var(--text)">numele produsului</strong> folosind baza de date globală <strong style="color:var(--accent)">Open Food Facts</strong> (3M+ produse).</p>
-      <p style="margin-bottom:8px">Sunt detectate automat: <span style="color:var(--red)">E-uri periculoase</span>, <span style="color:var(--red)">ftalați</span>, <span style="color:var(--red)">metale grele</span>, <span style="color:var(--yellow)">grăsimi trans</span>, <span style="color:var(--yellow)">zahăr excesiv</span>, <span style="color:var(--yellow)">sare excesivă</span>.</p>
-    </div>
-  </div>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;">
-    <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-bottom:10px;">📊 Scorul A-E</div>
-    ${[
-      {g:'A',cls:'grade-A',desc:'Fără substanțe problematice'},
-      {g:'B',cls:'grade-B',desc:'Aditivi discutabili minori'},
-      {g:'C',cls:'grade-C',desc:'Consum moderat recomandat'},
-      {g:'D',cls:'grade-D',desc:'Conține substanțe periculoase'},
-      {g:'E',cls:'grade-E',desc:'Periculos — de evitat'},
-    ].map(g=>`
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-        <div class="score-badge ${g.cls}" style="width:36px;height:36px;font-size:1rem;border-radius:8px;flex-shrink:0">${g.g}</div>
-        <span style="font-size:0.8rem;color:var(--text2)">${g.desc}</span>
-      </div>`).join('')}
-  </div>
-  <div style="background:var(--red-dim);border:1px solid rgba(255,71,87,0.2);border-radius:14px;padding:14px;margin-bottom:12px;">
-    <div style="font-size:0.75rem;font-weight:700;color:var(--red);margin-bottom:8px;">🚫 Cei mai periculoși aditivi</div>
-    <div style="font-size:0.72rem;color:var(--text2);line-height:1.8;">
-      E250 (nitrit sodiu) • E251 (nitrat sodiu) • E171 (dioxid titan) • E951 (aspartam) • E102 (tartrazină) • E123 (amarant) • E320 (BHA) • HFCS • Grăsimi trans • BPA/ftalați
-    </div>
-  </div>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:0.7rem;color:var(--text3);line-height:1.7;">
-    ⚠️ Această aplicație oferă informații educaționale. Nu înlocuiește sfatul medical. Datele provin din Open Food Facts și literatura științifică publică.
-  </div>`;
-}
-
-// INIT
-renderDB();
-renderInfo();
+            if (data.status === 1) {
+                const p = data.product;
+                const score = (p.nutrition_grades || 'C').toUpperCase();
+                resArea.innerHTML = `
+                    <div class="result-card">
+                        <div class="grade-badge grade-${score.toLowerCase()}">${score}</div>
+                        <h2>${p.product_name || 'Produs Necunoscut'}</h2>
+                        <p style="color: var(--text2)">Brand: ${p.brands || 'N/A'}</p>
+                        <hr style="margin: 15px 0; opacity: 0.1">
+                        <p><strong>Ingrediente:</strong> ${p.ingredients_text_ro || p.ingredients_text || 'Informație indisponibilă'}</p>
+                    </div>
+                `;
+            } else {
+                resArea.innerHTML = '<div class="result-card">❌ Produsul nu a fost găsit.</div>';
+            }
+        } catch (e) {
+            resArea.innerHTML = '<div class="result-card">❌ Eroare de conexiune.</div>';
+        }
+    }
 </script>
+
 </body>
 </html>
