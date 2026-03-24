@@ -3,139 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SafeFood Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>SafeFood & Beauty Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
-        :root {
-            --bg: #1A1A1F; --bg2: #141418; --surface: #222228; --card: #2A2A32;
-            --green: #00D68F; --red: #FF4757; --yellow: #FFB830; --orange: #FF6B35;
-            --text: #EAEAF0; --text2: #A0A0B0; --text3: #6B6B80; --accent: #7C6FEA;
-            --border: rgba(255,255,255,0.06);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Space Grotesk', sans-serif; background: var(--bg2); color: var(--text); }
-        .app { max-width: 430px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        header { background: var(--bg); padding: 40px 20px 15px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .logo-text { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; }
-        .logo-text .safe { color: var(--green); }
-        
-        .tabs { display: flex; background: var(--bg); border-bottom: 1px solid var(--border); }
-        .tab { flex: 1; padding: 15px; font-size: 0.7rem; font-weight: 700; color: var(--text3); background: none; border: none; cursor: pointer; text-transform: uppercase; }
-        .tab.active { color: var(--green); border-bottom: 2px solid var(--green); }
-
-        .content { padding: 16px; flex: 1; }
-        .search-card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 15px; }
+        :root { --bg: #1A1A1F; --card: #2A2A32; --green: #00D68F; --red: #FF4757; --orange: #FF6B35; --text: #EAEAF0; --border: rgba(255,255,255,0.06); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
+        header { padding: 40px 20px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
+        .lang-btn { background: var(--card); color: var(--green); border: 1px solid var(--green); padding: 5px 12px; border-radius: 8px; font-weight: bold; }
+        .content { padding: 15px; }
+        .search-box { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
         .barcode-row { display: flex; gap: 8px; margin-bottom: 12px; }
-        .barcode-input { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; outline: none; }
-        .search-go { background: var(--green); color: #000; border: none; border-radius: 10px; padding: 0 20px; font-weight: 700; }
+        .barcode-input { flex: 1; background: #141418; border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; outline: none; }
+        .go-btn { background: var(--green); color: #000; border: none; border-radius: 10px; padding: 0 15px; font-weight: bold; }
+        .cam-btn { width: 100%; background: rgba(0,214,143,0.1); border: 1.5px solid var(--green); border-radius: 12px; padding: 15px; color: var(--green); font-weight: bold; }
         
-        .cam-btn { width: 100%; background: var(--surface); border: 1px solid var(--green); border-radius: 12px; padding: 15px; color: var(--green); font-weight: 600; cursor: pointer; }
+        #scanner-container { display: none; position: relative; width: 100%; height: 280px; border-radius: 15px; overflow: hidden; background: #000; margin-bottom: 15px; }
+        #interactive.viewport video { width: 100%; height: 100%; object-fit: cover; }
+        .scan-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .scan-frame { width: 220px; height: 140px; border: 2.5px solid var(--green); border-radius: 12px; box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); }
+        .stop-btn { position: absolute; top: 10px; right: 10px; background: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; z-index: 10; }
 
-        /* Stil pentru zona de camera */
-        #scanner-container { display: none; width: 100%; border-radius: 15px; overflow: hidden; position: relative; background: #000; margin-bottom: 15px; }
-        #scanner-container video { width: 100%; height: auto; }
-        .scan-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; height: 40%; border: 2px solid var(--green); border-radius: 10px; box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); pointer-events: none; }
-        .stop-btn { position: absolute; top: 10px; right: 10px; background: var(--red); color: #fff; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; z-index: 10; }
-
-        .result-card { background: var(--card); border-radius: 16px; padding: 20px; margin-top: 15px; border: 1px solid var(--border); }
-        .grade-badge { display: inline-block; padding: 10px 20px; border-radius: 10px; font-size: 2rem; font-weight: 900; margin-bottom: 10px; }
-        .grade-a { background: var(--green); color: #000; }
-        .grade-e { background: var(--red); color: #fff; }
-        .loading { text-align: center; padding: 20px; color: var(--green); }
+        .res-card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); animation: slideUp 0.3s ease; }
+        .badge { display: inline-block; padding: 5px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 0.7rem; }
+        .danger-text { color: var(--red); font-weight: bold; }
+        @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <header>
-        <div class="logo-text"><span class="safe">Safe</span>Food Pro</div>
-    </header>
+<header>
+    <h2 style="color: var(--green)">Safe<span style="color: white">Pro</span></h2>
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">RO</button>
+</header>
 
-    <div class="tabs">
-        <button class="tab active">Scanner</button>
-        <button class="tab">Bază Date</button>
+<div class="content">
+    <div class="search-box">
+        <div class="barcode-row">
+            <input type="text" id="manualInput" class="barcode-input" placeholder="Cod bare...">
+            <button class="go-btn" onclick="runSearch(document.getElementById('manualInput').value)">GO</button>
+        </div>
+        <button class="cam-btn" onclick="startScanner()" id="lblScan">📷 SCANEAZĂ COD DE BARE</button>
     </div>
 
-    <div class="content">
-        <div class="search-card">
-            <div class="barcode-row">
-                <input type="text" id="manual-input" class="barcode-input" placeholder="Cod bare (ex: 5449000000996)">
-                <button class="search-go" onclick="runSearch(document.getElementById('manual-input').value)">GO</button>
-            </div>
-            <button class="cam-btn" onclick="startScanner()">📷 SCANEAZĂ COD DE BARE</button>
-        </div>
-
-        <div id="scanner-container">
-            <button class="stop-btn" onclick="stopScanner()">STOP</button>
-            <div id="interactive" class="viewport"></div>
-            <div class="scan-overlay"></div>
-        </div>
-
-        <div id="result-area"></div>
+    <div id="scanner-container">
+        <button class="stop-btn" onclick="stopScanner()">STOP</button>
+        <div id="interactive" class="viewport"></div>
+        <div class="scan-overlay"><div class="scan-frame"></div></div>
     </div>
+
+    <div id="result-area"></div>
 </div>
 
 <script>
-    // Configurare Scanner
+    let currentLang = 'RO';
+    const toxicList = ["paraben", "sulfate", "silicone", "alcohol denat", "fragrance", "aluminum", "phthalate", "fluoride", "nitrite", "aspartame"];
+
+    function toggleLang() {
+        currentLang = currentLang === 'RO' ? 'EN' : 'RO';
+        document.getElementById('langBtn').innerText = currentLang;
+    }
+
     function startScanner() {
         document.getElementById('scanner-container').style.display = 'block';
         Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#interactive'),
-                constraints: { facingMode: "environment" }
-            },
-            decoder: { readers: ["ean_reader", "ean_8_reader", "upc_reader"] }
-        }, function(err) {
-            if (err) { alert("Eroare camera: " + err); return; }
-            Quagga.start();
-        });
-
-        Quagga.onDetected(function(data) {
-            let code = data.codeResult.code;
-            stopScanner();
-            runSearch(code);
-        });
+            inputStream: { name: "Live", type: "LiveStream", target: document.querySelector('#interactive'), constraints: { facingMode: "environment" } },
+            decoder: { readers: ["ean_reader", "ean_8_reader", "upc_reader"] },
+            locate: true
+        }, (err) => { if(!err) Quagga.start(); });
+        Quagga.onDetected((data) => { stopScanner(); runSearch(data.codeResult.code); });
     }
 
-    function stopScanner() {
-        Quagga.stop();
-        document.getElementById('scanner-container').style.display = 'none';
-    }
+    function stopScanner() { Quagga.stop(); document.getElementById('scanner-container').style.display = 'none'; }
 
-    // Căutare în OpenFoodFacts
     async function runSearch(code) {
-        if(!code) return;
         const resArea = document.getElementById('result-area');
-        resArea.innerHTML = '<div class="loading">Se caută produsul...</div>';
+        resArea.innerHTML = `<p style="text-align:center; padding: 20px;">🔍 Căutăm în baza de date...</p>`;
 
-        try {
-            const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
-            const data = await response.json();
+        // Încercăm prima dată Mâncare/Băuturi/Ceaiuri
+        let url = `https://world.openfoodfacts.org/api/v0/product/${code}.json`;
+        let response = await fetch(url);
+        let data = await response.json();
 
-            if (data.status === 1) {
-                const p = data.product;
-                const score = (p.nutrition_grades || 'C').toUpperCase();
-                resArea.innerHTML = `
-                    <div class="result-card">
-                        <div class="grade-badge grade-${score.toLowerCase()}">${score}</div>
-                        <h2>${p.product_name || 'Produs Necunoscut'}</h2>
-                        <p style="color: var(--text2)">Brand: ${p.brands || 'N/A'}</p>
-                        <hr style="margin: 15px 0; opacity: 0.1">
-                        <p><strong>Ingrediente:</strong> ${p.ingredients_text_ro || p.ingredients_text || 'Informație indisponibilă'}</p>
-                    </div>
-                `;
-            } else {
-                resArea.innerHTML = '<div class="result-card">❌ Produsul nu a fost găsit.</div>';
-            }
-        } catch (e) {
-            resArea.innerHTML = '<div class="result-card">❌ Eroare de conexiune.</div>';
+        // Dacă nu găsim, încercăm Cosmetice/Șampoane
+        if (data.status !== 1) {
+            url = `https://world.openbeautyfacts.org/api/v0/product/${code}.json`;
+            response = await fetch(url);
+            data = await response.json();
+        }
+
+        if (data.status === 1) {
+            const p = data.product;
+            let ing = p[`ingredients_text_${currentLang.toLowerCase()}`] || p.ingredients_text_ro || p.ingredients_text_en || p.ingredients_text || "---";
+            
+            // Verificare automată ingrediente nasoale
+            let warnings = [];
+            toxicList.forEach(item => {
+                if (ing.toLowerCase().includes(item)) warnings.push(item.toUpperCase());
+            });
+
+            const score = (p.nutrition_grades || '---').toUpperCase();
+            const type = url.includes('beauty') ? 'COSMETIC' : 'ALIMENTAR';
+
+            resArea.innerHTML = `
+                <div class="res-card">
+                    <span class="badge" style="background:var(--green); color:#000">${type}</span>
+                    <h3 style="margin-bottom:5px">${p.product_name || 'Produs Necunoscut'}</h3>
+                    <p style="color:var(--orange); font-size:0.8rem; margin-bottom:15px">${p.brands || ''}</p>
+                    
+                    ${warnings.length > 0 ? `<div style="margin-bottom:15px; background:rgba(255,71,87,0.1); padding:10px; border-radius:8px;">
+                        <p class="danger-text">⚠️ ATENȚIE: Conține ${warnings.join(", ")}</p>
+                    </div>` : ''}
+
+                    <p style="font-size: 0.9rem; line-height: 1.5;"><strong>Ingrediente:</strong> ${ing}</p>
+                </div>`;
+        } else {
+            resArea.innerHTML = `<div class="res-card">❌ Produsul nu este în baza noastră. Cod: ${code}</div>`;
         }
     }
 </script>
-
 </body>
 </html>
