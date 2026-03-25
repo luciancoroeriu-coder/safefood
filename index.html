@@ -1,125 +1,139 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SafeFood & Beauty Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <title>SafePro - Siguranța Ta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
-        :root { --bg: #1A1A1F; --card: #2A2A32; --green: #00D68F; --red: #FF4757; --orange: #FF6B35; --text: #EAEAF0; --border: rgba(255,255,255,0.06); }
+        :root { --bg: #0A0A0C; --card: #16161D; --green: #00D68F; --red: #FF4757; --text: #FFFFFF; --dim: #888; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
-        header { padding: 40px 20px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
-        .lang-btn { background: var(--card); color: var(--green); border: 1px solid var(--green); padding: 5px 12px; border-radius: 8px; font-weight: bold; }
-        .content { padding: 15px; }
-        .search-box { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
-        .barcode-row { display: flex; gap: 8px; margin-bottom: 12px; }
-        .barcode-input { flex: 1; background: #141418; border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; outline: none; }
-        .go-btn { background: var(--green); color: #000; border: none; border-radius: 10px; padding: 0 15px; font-weight: bold; }
-        .cam-btn { width: 100%; background: rgba(0,214,143,0.1); border: 1.5px solid var(--green); border-radius: 12px; padding: 15px; color: var(--green); font-weight: bold; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 40px; }
         
-        #scanner-container { display: none; position: relative; width: 100%; height: 280px; border-radius: 15px; overflow: hidden; background: #000; margin-bottom: 15px; }
-        #interactive.viewport video { width: 100%; height: 100%; object-fit: cover; }
-        .scan-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-        .scan-frame { width: 220px; height: 140px; border: 2.5px solid var(--green); border-radius: 12px; box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); }
-        .stop-btn { position: absolute; top: 10px; right: 10px; background: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; z-index: 10; }
+        header { padding: 30px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
+        .logo span { color: var(--green); }
 
-        .res-card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); animation: slideUp 0.3s ease; }
-        .badge { display: inline-block; padding: 5px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 0.7rem; }
-        .danger-text { color: var(--red); font-weight: bold; }
-        @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .content { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+        /* Cardul de Instrucțiuni */
+        .info-card { background: rgba(0, 214, 143, 0.05); border: 1px solid rgba(0, 214, 143, 0.2); border-radius: 20px; padding: 15px; margin-bottom: 20px; }
+        .info-card h4 { color: var(--green); font-size: 0.9rem; margin-bottom: 8px; text-transform: uppercase; }
+        .steps { font-size: 0.85rem; color: #ccc; line-height: 1.5; }
+
+        /* Butonul Principal */
+        .main-btn { 
+            width: 100%; background: var(--green); color: #000; border: none; 
+            border-radius: 18px; padding: 20px; font-weight: 800; font-size: 1rem; 
+            box-shadow: 0 8px 15px rgba(0, 214, 143, 0.2); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        /* Camera Overlay */
+        #scanner-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; }
+        #interactive.viewport video { width: 100%; height: 100%; object-fit: cover; }
+        .overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+        .reticle { width: 260px; height: 160px; border: 2px solid var(--green); border-radius: 20px; box-shadow: 0 0 0 5000px rgba(0,0,0,0.7); }
+        .close-btn { position: absolute; bottom: 50px; background: #fff; color: #000; padding: 12px 35px; border-radius: 30px; font-weight: bold; pointer-events: auto; border: none; }
+
+        /* Rezultate și Erori */
+        .result { background: var(--card); border-radius: 24px; padding: 25px; margin-top: 25px; border: 1px solid rgba(255,255,255,0.1); animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .error-title { color: var(--red); font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .grade-badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-weight: 900; background: var(--green); color: #000; font-size: 1.2rem; margin-bottom: 10px; }
+        .ing-box { font-size: 0.9rem; color: #BBB; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
 <header>
-    <h2 style="color: var(--green)">Safe<span style="color: white">Pro</span></h2>
-    <button class="lang-btn" onclick="toggleLang()" id="langBtn">RO</button>
+    <div class="logo">Safe<span>Pro</span></div>
+    <div style="font-size: 0.7rem; background: #222; padding: 4px 8px; border-radius: 5px; color: var(--green);">v2.1</div>
 </header>
 
 <div class="content">
-    <div class="search-box">
-        <div class="barcode-row">
-            <input type="text" id="manualInput" class="barcode-input" placeholder="Cod bare...">
-            <button class="go-btn" onclick="runSearch(document.getElementById('manualInput').value)">GO</button>
+    <div class="info-card">
+        <h4>🛡️ Cum funcționează?</h4>
+        <div class="steps">
+            1. Apasă pe butonul de scanare.<br>
+            2. Îndreaptă camera spre codul de bare al produsului.<br>
+            3. Află imediat ce ingrediente conține și cât e de sigur.
         </div>
-        <button class="cam-btn" onclick="startScanner()" id="lblScan">📷 SCANEAZĂ COD DE BARE</button>
     </div>
 
-    <div id="scanner-container">
-        <button class="stop-btn" onclick="stopScanner()">STOP</button>
-        <div id="interactive" class="viewport"></div>
-        <div class="scan-overlay"><div class="scan-frame"></div></div>
+    <button class="main-btn" onclick="openCam()">
+        <span>📷</span> SCANEAZĂ COD BARE
+    </button>
+    
+    <div style="margin-top: 15px; display: flex; gap: 8px;">
+        <input type="number" id="codeIn" style="flex:1; background:#111; border:1px solid #333; padding:15px; border-radius:12px; color:#fff;" placeholder="Cod manual...">
+        <button onclick="fetchData(document.getElementById('codeIn').value)" style="background:#222; color:#fff; border:none; padding:15px; border-radius:12px; font-weight:bold;">GO</button>
     </div>
 
-    <div id="result-area"></div>
+    <div id="out"></div>
+</div>
+
+<div id="scanner-container">
+    <div id="interactive" class="viewport"></div>
+    <div class="overlay">
+        <div class="reticle"></div>
+        <p style="color:#fff; margin-top:20px; font-weight: bold;">CADREAZĂ CODUL DE BARE</p>
+        <button class="close-btn" onclick="closeCam()">ÎNCHIDE</button>
+    </div>
 </div>
 
 <script>
-    let currentLang = 'RO';
-    const toxicList = ["paraben", "sulfate", "silicone", "alcohol denat", "fragrance", "aluminum", "phthalate", "fluoride", "nitrite", "aspartame"];
-
-    function toggleLang() {
-        currentLang = currentLang === 'RO' ? 'EN' : 'RO';
-        document.getElementById('langBtn').innerText = currentLang;
-    }
-
-    function startScanner() {
+    function openCam() {
         document.getElementById('scanner-container').style.display = 'block';
         Quagga.init({
             inputStream: { name: "Live", type: "LiveStream", target: document.querySelector('#interactive'), constraints: { facingMode: "environment" } },
-            decoder: { readers: ["ean_reader", "ean_8_reader", "upc_reader"] },
-            locate: true
+            decoder: { readers: ["ean_reader", "ean_8_reader", "upc_reader", "code_128_reader"] }
         }, (err) => { if(!err) Quagga.start(); });
-        Quagga.onDetected((data) => { stopScanner(); runSearch(data.codeResult.code); });
+        Quagga.onDetected((res) => { closeCam(); fetchData(res.codeResult.code); });
     }
 
-    function stopScanner() { Quagga.stop(); document.getElementById('scanner-container').style.display = 'none'; }
+    function closeCam() { Quagga.stop(); document.getElementById('scanner-container').style.display = 'none'; }
 
-    async function runSearch(code) {
-        const resArea = document.getElementById('result-area');
-        resArea.innerHTML = `<p style="text-align:center; padding: 20px;">🔍 Căutăm în baza de date...</p>`;
+    async function fetchData(code) {
+        if(!code) return;
+        const out = document.getElementById('out');
+        out.innerHTML = `<div class="result" style="text-align:center;">🔍 Căutăm informații despre <b>${code}</b>...</div>`;
 
-        // Încercăm prima dată Mâncare/Băuturi/Ceaiuri
-        let url = `https://world.openfoodfacts.org/api/v0/product/${code}.json`;
-        let response = await fetch(url);
-        let data = await response.json();
+        const url = `https://world.openfoodfacts.org/api/v2/product/${code}.json?fields=product_name,brands,ingredients_text,ingredients_text_ro,nutrition_grades`;
 
-        // Dacă nu găsim, încercăm Cosmetice/Șampoane
-        if (data.status !== 1) {
-            url = `https://world.openbeautyfacts.org/api/v0/product/${code}.json`;
-            response = await fetch(url);
-            data = await response.json();
-        }
+        try {
+            const r = await fetch(url);
+            const d = await r.json();
 
-        if (data.status === 1) {
-            const p = data.product;
-            let ing = p[`ingredients_text_${currentLang.toLowerCase()}`] || p.ingredients_text_ro || p.ingredients_text_en || p.ingredients_text || "---";
-            
-            // Verificare automată ingrediente nasoale
-            let warnings = [];
-            toxicList.forEach(item => {
-                if (ing.toLowerCase().includes(item)) warnings.push(item.toUpperCase());
-            });
-
-            const score = (p.nutrition_grades || '---').toUpperCase();
-            const type = url.includes('beauty') ? 'COSMETIC' : 'ALIMENTAR';
-
-            resArea.innerHTML = `
-                <div class="res-card">
-                    <span class="badge" style="background:var(--green); color:#000">${type}</span>
-                    <h3 style="margin-bottom:5px">${p.product_name || 'Produs Necunoscut'}</h3>
-                    <p style="color:var(--orange); font-size:0.8rem; margin-bottom:15px">${p.brands || ''}</p>
-                    
-                    ${warnings.length > 0 ? `<div style="margin-bottom:15px; background:rgba(255,71,87,0.1); padding:10px; border-radius:8px;">
-                        <p class="danger-text">⚠️ ATENȚIE: Conține ${warnings.join(", ")}</p>
-                    </div>` : ''}
-
-                    <p style="font-size: 0.9rem; line-height: 1.5;"><strong>Ingrediente:</strong> ${ing}</p>
-                </div>`;
-        } else {
-            resArea.innerHTML = `<div class="res-card">❌ Produsul nu este în baza noastră. Cod: ${code}</div>`;
+            if (d.status === 1) {
+                const p = d.product;
+                const grade = (p.nutrition_grades || "N/A").toUpperCase();
+                out.innerHTML = `
+                    <div class="result">
+                        <div class="grade-badge">Scor: ${grade}</div>
+                        <h2 style="margin-bottom:5px;">${p.product_name || 'Produs Necunoscut'}</h2>
+                        <p style="color:var(--green); font-weight:bold; font-size:0.9rem;">${p.brands || 'Brand indisponibil'}</p>
+                        <div class="ing-box">
+                            <strong>📋 Ingrediente detectate:</strong><br>
+                            ${p.ingredients_text_ro || p.ingredients_text || 'Lista de ingrediente nu este disponibilă pentru acest cod.'}
+                        </div>
+                    </div>`;
+            } else {
+                out.innerHTML = `
+                    <div class="result">
+                        <div class="error-title">❌ Produs Negăsit</div>
+                        <p style="font-size:0.9rem; color:#ccc;">Codul <b>${code}</b> nu a putut fi identificat în bazele de date de alimente sau cosmetice.</p>
+                        <div style="margin-top:15px; font-size:0.8rem; background:rgba(255,255,255,0.05); padding:10px; border-radius:10px;">
+                            💡 <b>Sfat:</b><br>
+                            • Asigură-te că lumina este bună.<br>
+                            • Încearcă să introduci codul manual folosind căsuța de mai sus.
+                        </div>
+                    </div>`;
+            }
+        } catch (e) {
+            out.innerHTML = `<div class="result">❌ <b>Eroare de conexiune.</b> Te rugăm să verifici dacă ești conectat la internet.</div>`;
         }
     }
 </script>
