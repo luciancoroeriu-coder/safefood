@@ -4,322 +4,285 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Green Shield Analytics - SafePro</title>
+    <title>SafePro - Analiză Alimentară</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
-        :root {
-            /* Culori inspirate din LOGO */
-            --bg: #0A0A0C;
-            --card: #14141A;
-            --green: #00D68F; /* Verdele deschis din logo */
-            --green-dim: #002D1E;
-            --red: #FF4757;
-            --red-dim: rgba(255, 71, 87, 0.1);
-            --text: #FFFFFF;
-            --border: rgba(255, 255, 255, 0.05);
-        }
-        
+        :root { --bg: #0D0D12; --card: #1C1C26; --green: #00D68F; --red: #FF4757; --text: #FFFFFF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
-        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
         
-        /* HEADER - Integrare LOGO */
-        header { 
-            padding: 25px 20px; 
-            display: flex; 
-            justify-content: center; /* Centram logo-ul */
-            align-items: center; 
-            border-bottom: 1px solid var(--border); 
-            position: sticky; top: 0; 
-            background: var(--bg); 
-            z-index: 100;
-        }
-        .header-logo-img {
-            max-width: 150px; /* Adjustam marimea logo-ului */
-            height: auto;
-            object-fit: contain;
-        }
+        /* HEADER & LOGO (Pe copertă) */
+        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: var(--bg); position: sticky; top: 0; z-index: 100; }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        /* Aici pui link-ul catre poza ta cu logo-ul. Acum are un scut verde provizoriu */
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 18px;}
+        .logo-text { font-size: 1.4rem; font-weight: 800; }
+        .logo-text span { color: var(--green); }
+        .lang-btn { background: #222; color: var(--green); border: 1px solid var(--green); padding: 6px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
         .content { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        /* GHID - Vizibil MEREU inainte de scanare */
-        .info-card { 
-            background: var(--green-dim); 
-            border: 1px dashed var(--green); 
-            border-radius: 18px; 
-            padding: 15px; 
-            margin-bottom: 20px; 
-            font-size: 0.85rem;
-            animation: fadeIn 0.3s;
-        }
-        .info-card h4 { color: var(--green); font-size: 0.95rem; margin-bottom: 8px; font-weight: 700; }
-        .info-card p { opacity: 0.8; line-height: 1.5; color: #BBB; }
+        /* INSTRUCȚIUNI (Ghid) */
+        .guide-box { background: rgba(0, 214, 143, 0.05); border: 1px solid rgba(0, 214, 143, 0.2); border-radius: 16px; padding: 18px; margin-bottom: 20px; }
+        .guide-box h4 { font-size: 0.95rem; margin-bottom: 8px; color: var(--green); display: flex; align-items: center; gap: 8px; }
+        .guide-box p { font-size: 0.85rem; color: #ccc; line-height: 1.5; margin-bottom: 5px;}
 
-        /* BUTOANE PRINCIPALE */
-        .scan-trigger-btn { 
-            width: 100%; 
-            background: linear-gradient(135deg, #00D68F, #00A36C); /* Gradient verde */
-            color: #000; 
-            border: none; 
-            border-radius: 15px; 
-            padding: 20px; 
-            font-weight: 800; 
-            font-size: 1.1rem; 
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(0, 214, 143, 0.25);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: transform 0.1s;
-        }
-        .scan-trigger-btn:active { transform: scale(0.98); }
+        /* BUTOANE */
+        .scan-btn { width: 100%; background: var(--green); color: #000; border: none; border-radius: 16px; padding: 20px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 214, 143, 0.2); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .input-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-row input { flex: 1; background: #111; border: 1px solid #333; padding: 15px; border-radius: 12px; color: #fff; font-size: 1rem; outline: none; }
+        .input-row input:focus { border-color: var(--green); }
+        .go-btn { background: #222; color: var(--green); border: 1px solid var(--green); padding: 0 25px; border-radius: 12px; font-weight: bold; }
+
+        /* REZULTATE */
+        .res-card { background: var(--card); border-radius: 20px; padding: 25px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.05); animation: fadeIn 0.3s ease; }
+        .score-badge { display: inline-block; padding: 6px 15px; border-radius: 8px; font-weight: 900; background: var(--green); color: #000; margin-bottom: 12px; font-size: 1.1rem; }
         
-        /* INTRODUCERE MANUALA */
-        .input-group { display: flex; gap: 8px; margin: 20px 0; }
-        .barcode-input-field { 
-            flex: 1; background: #111; 
-            border: 1px solid #333; 
-            padding: 15px; 
-            border-radius: 12px; 
-            color: #fff; font-size: 1rem;
-            -webkit-appearance: none;
-        }
-        .barcode-input-field:focus { border-color: var(--green); outline: none; }
-        .search-go-btn { 
-            background: #222; 
-            color: var(--green); 
-            border: 1px solid var(--green); 
-            padding: 0 20px; 
-            border-radius: 12px; 
-            font-weight: bold; cursor: pointer;
-        }
+        /* AVERTISMENTE (Separate de etichetă) */
+        .warnings-container { margin-top: 20px; margin-bottom: 20px; }
+        .warning-item { background: rgba(255, 71, 87, 0.08); border-left: 4px solid var(--red); padding: 15px; margin-bottom: 10px; border-radius: 0 12px 12px 0; }
+        .warning-title { color: var(--red); font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; }
+        .warning-desc { font-size: 0.85rem; color: #ddd; line-height: 1.4; }
+        .safe-msg { background: rgba(0, 214, 143, 0.1); color: var(--green); padding: 15px; border-radius: 12px; font-weight: bold; font-size: 0.9rem; text-align: center; }
 
-        /* REZULTATE - Card */
-        #results-area { min-height: 100px; }
-        .result-main-card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); animation: slideUp 0.3s ease-out; }
-        
-        /* SCOR - NutriScore stilizat */
-        .score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .score-badge { 
-            display: inline-block; padding: 5px 15px; border-radius: 8px; 
-            font-size: 1.5rem; font-weight: 900; 
-            color: #000; background: var(--green); /* Default safe color */
-        }
-        /* Culori Scor - Daca sunt prezente */
-        .score-A { background: var(--green); color: #000; }
-        .score-C { background: #FFB830; color: #000; }
-        .score-E { background: var(--red); color: #fff; }
+        /* ETICHETA BRUTĂ */
+        .raw-ingredients { font-size: 0.8rem; color: #888; border-top: 1px dashed #333; padding-top: 15px; line-height: 1.5; }
 
-        /* TITLURI SECTIUNI */
-        .section-label { font-size: 0.75rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; display: block; }
-
-        /* AVERTISMENTE EXPLICATE */
-        .harmful-item { background: var(--red-dim); border-left: 4px solid var(--red); padding: 12px; margin-top: 8px; border-radius: 0 10px 10px 0; }
-        .harmful-item b { color: var(--red); font-size: 0.9rem; display: block; margin-bottom: 3px; }
-        .harmful-item span { font-size: 0.82rem; color: #DDD; line-height: 1.4; display: block; }
-        .no-toxin { color: var(--green); font-size: 0.85rem; margin-top: 5px; font-weight: bold; }
-
-        /* INGREDIENTE - Text brut */
-        .ing-raw-text { font-size: 0.8rem; color: #BBB; line-height: 1.6; margin-top: 8px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
-
-        /* CAMERA FULLSCREEN OVERLAY */
-        #scanner-container { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; }
+        /* CAMERA */
+        #scanner-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; }
         #interactive.viewport video { width: 100%; height: 100%; object-fit: cover; }
-        .camera-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-        
-        /* Vizor Scanare */
-        .scan-frame-visor { 
-            width: 260px; height: 160px; border: 2.5px solid var(--green); 
-            border-radius: 20px; 
-            box-shadow: 0 0 0 5000px rgba(0,0,0,0.7); /* Estompare fundal */
-            position: relative;
-        }
-        .scan-frame-visor::after {
-            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px;
-            background: var(--red); box-shadow: 0 0 15px var(--red); animation: scanLine 2s infinite;
-        }
-        @keyframes scanLine { 0%, 100% { top: 15%; } 50% { top: 85%; } }
-        
-        .camera-msg { color: #fff; margin-top: 20px; font-weight: bold; font-size: 0.9rem; text-shadow: 0 2px 5px #000; }
-        .close-cam-btn { position: absolute; bottom: 40px; background: rgba(255,255,255,0.15); color: #fff; border: 1px solid #fff; padding: 12px 35px; border-radius: 30px; font-weight: bold; pointer-events: auto; backdrop-filter: blur(5px); }
+        .reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 260px; height: 160px; border: 2px solid var(--green); border-radius: 16px; box-shadow: 0 0 0 5000px rgba(0,0,0,0.7); }
+        .close-cam { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); padding: 15px 40px; border-radius: 30px; background: #fff; color: #000; font-weight: bold; border: none; }
 
-        /* ANIMATII */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="logo.png" alt="Green Shield Analytics - SafePro" class="header-logo-img">
+    <div class="logo-container">
+        <div class="logo-img">🛡️</div>
+        <div class="logo-text">Safe<span>Pro</span></div>
+    </div>
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">RO</button>
 </header>
 
 <div class="content">
-    
-    <div id="guide-card" class="info-card">
-        <h4>🛡️ GHID DE SIGURANȚĂ</h4>
-        <p>Folosiți scanerul sau introduceți codul de bare pentru a analiza produsul. SafePro va detecta automat substanțele nocive și vă va explica la ce dăunează, separat de etichetă.</p>
+    <div class="guide-box">
+        <h4 id="ui-guide-title">🛡️ Cum funcționează?</h4>
+        <p id="ui-guide-1">1. Apasă pe butonul de scanare.</p>
+        <p id="ui-guide-2">2. Îndreaptă camera spre codul de bare.</p>
+        <p id="ui-guide-3">3. Citește avertismentele explicate mai jos.</p>
     </div>
 
-    <button class="scan-trigger-btn" onclick="openCam()">
-        <span>📷</span> SCANEAZĂ COD BARE
+    <button class="scan-btn" onclick="openScanner()">
+        📷 <span id="ui-scan-btn">SCANEAZĂ PRODUS</span>
     </button>
     
-    <div class="input-group">
-        <input type="number" id="manualInput" class="barcode-input-field" placeholder="Sau introdu codul manual...">
-        <button class="search-go-btn" onclick="fetchData(document.getElementById('manualInput').value)">GO</button>
+    <div class="input-row">
+        <input type="number" id="manualCode" placeholder="...">
+        <button class="go-btn" onclick="processBarcode(document.getElementById('manualCode').value)">GO</button>
     </div>
 
-    <div id="results-area"></div>
+    <div id="result-area"></div>
 </div>
 
 <div id="scanner-container">
     <div id="interactive" class="viewport"></div>
-    <div class="camera-overlay">
-        <div class="scan-frame-visor"></div>
-        <p class="camera-msg">CADRAȚI CODUL DE BARE</p>
-        <button class="close-cam-btn" onclick="closeCam()">ÎNCHIDE</button>
-    </div>
+    <div class="reticle"></div>
+    <p style="position: absolute; top: 20%; width: 100%; text-align: center; color: white; font-weight: bold;">CENTRAȚI CODUL DE BARE</p>
+    <button class="close-cam" onclick="closeScanner()">ÎNCHIDE</button>
 </div>
 
 <script>
-    // ===== SISTEM LINGVISTIC UNIC (RO) =====
-    const UI_TXT = {
-        searching: "🔍 Se caută informații...",
-        ingredients: "📋 Ingrediente detectate:",
-        warnings: "⚠️ AVERTISMENTE NOXE (Separat de etichetă):",
-        grade: "SCOR SIGURANȚĂ:",
-        safeProduct: "Nicio substanță nocivă cunoscută nu a fost detectată în acest produs! ✅",
-        notFound: "❌ Produsul nu a fost găsit în bazele de date globale. Verificați codul sau încercați alt produs.",
-        connErr: "❌ Eroare de conexiune. Te rugăm să verifici dacă ești conectat la internet.",
-        brand: "Brand:",
-        ingredientsUnavail: "Lista de ingrediente nu este disponibilă pentru acest cod în baza de date globală."
-    };
-
-    // ===== BAZA DE DATE AVERTISMENTE EXPLICATE (RO) =====
-    const harmfulDb = [
-        { regex: /chinin/i, name: "Chinină", ro: "Dăunează inimii! Poate provoca aritmii (bătăi neregulate) și reacții alergice severe. Nerecomandat gravidelor și copiilor." },
-        { regex: /sirop.*glucoz/i, name: "Sirop de Glucoză / Fructoză", ro: "Crește rapid glicemia, dăunează ficatului, risc mare de diabet și obezitate. Indice glicemic foarte mare." },
-        { regex: /zahar|sugar|zucker/i, name: "Zahăr adăugat", ro: "Risc major de diabet, boli de inimă și carii. Furnizează calorii goale, dăunează metabolismului în exces." },
-        { regex: /e\s*202|sorbat.*potasiu/i, name: "E202 (Sorbat de Potasiu)", ro: "Poate irita pielea și ochii. Studii contradictorii privind toxicitatea la nivel celular în doze mari." },
-        { regex: /e\s*211|benzoat.*sodiu/i, name: "E211 (Benzoat de Sodiu)", ro: "Legat de hiperactivitate la copii (ADHD) și comportament impulsiv." },
-        { regex: /e\s*951|aspartam/i, name: "Aspartam", ro: "Îndulcitor controversat, posibil cancerigen IARC grupa 2B. Poate cauza dureri de cap sau neurologice persoanelor sensibile." },
-        { regex: /e\s*171|dioxid.*titan/i, name: "E171 (Dioxid de Titan)", ro: "INTERZIS în UE (2022) ca aditiv alimentar. Nanoparticule cancerigene, toxic pentru celule." },
-        { regex: /ulei.*palm|palm.*oil/i, name: "Ulei de Palmier (Nerafinat)", ro: "Bogat în grăsimi saturate, dăunează sistemului cardiovascular. Poate conține contaminanți cancerigeni din procesul de rafinare industrială." },
-        { regex: /coloran.*sintetic|colorant.*artificial|tartrazin|azorubin|sunset.*yellow|allura/i, name: "Coloranți Artificiali", ro: "Asociați cu hiperactivitatea la copii și alergii. Unii sunt interziși în SUA." },
-        { regex: /nitrozamin/i, name: "Nitrozamine", ro: "Substanțe cancerigene puternice formate adesea la procesarea mezelurilor (grătar/prăjire)." }
+    // --- 1. DICȚIONAR INTERN DE TOXINE (Baza ta de date explicativă) ---
+    // Keywords caută în orice limbă (ex: "zucker" pt Haribo, "sugar" pt engleză)
+    const toxinDB = [
+        {
+            id: 'sugar',
+            keywords: ['zahar', 'zahăr', 'sugar', 'zucker', 'sucre', 'glukosesirup', 'glucose', 'fructose', 'sirop'],
+            warnings: {
+                RO: { title: "⚠️ Zahăr / Sirop de Glucoză", desc: "Crește brusc glicemia. Consumul frecvent duce la rezistență la insulină, obezitate și probleme dentare." },
+                EN: { title: "⚠️ Sugar / Glucose Syrup", desc: "Spikes blood sugar rapidly. Frequent consumption leads to insulin resistance and obesity." }
+            }
+        },
+        {
+            id: 'quinine',
+            keywords: ['chinin', 'quinine', 'kinin'],
+            warnings: {
+                RO: { title: "⚠️ Chinină", desc: "Alcaloid care poate provoca reacții alergice, tulburări de auz sau aritmii. Strict nerecomandat gravidelor." },
+                EN: { title: "⚠️ Quinine", desc: "Can cause allergic reactions or arrhythmias. Strictly not recommended during pregnancy." }
+            }
+        },
+        {
+            id: 'preservatives',
+            keywords: ['e202', 'e 202', 'sorbat', 'sorbate', 'e211', 'e 211', 'benzoat', 'benzoate'],
+            warnings: {
+                RO: { title: "⚠️ Conservanți (E202 / E211)", desc: "Sorbatul și Benzoatul pot irita tractul digestiv. E211 este asociat cu declanșarea hiperactivității (ADHD) la copii." },
+                EN: { title: "⚠️ Preservatives (E202 / E211)", desc: "Can irritate the digestive tract. E211 is linked to triggering hyperactivity in children." }
+            }
+        },
+        {
+            id: 'palm',
+            keywords: ['palm', 'palmier', 'palmfett'],
+            warnings: {
+                RO: { title: "🌴 Ulei de Palmier", desc: "Bogat în grăsimi saturate. Procesarea lui la temperaturi înalte generează substanțe potențial cancerigene." },
+                EN: { title: "🌴 Palm Oil", desc: "High in saturated fats. Processing at high temperatures generates potentially carcinogenic substances." }
+            }
+        }
     ];
 
-    // ===== GESTIONARE CAMERA SCANER =====
-    function openCam() {
-        // Ascundem ghidul cand incepem scanarea
-        document.getElementById('guide-card').style.display = 'none';
+    // --- 2. TRADUCERI INTERFAȚĂ ---
+    const uiText = {
+        RO: {
+            gTitle: "🛡️ Cum funcționează?",
+            g1: "1. Apasă pe butonul de scanare.",
+            g2: "2. Îndreaptă camera spre codul de bare.",
+            g3: "3. Citește avertismentele explicate mai jos.",
+            scanBtn: "SCANEAZĂ PRODUS",
+            placeholder: "Introdu cod manual...",
+            searching: "🔍 Se analizează produsul...",
+            notFound: "❌ Produsul nu a fost găsit în nicio bază de date.",
+            safeMsg: "✅ Nicio substanță periculoasă majoră detectată în ingrediente.",
+            rawLabel: "Eticheta brută (Ingrediente):"
+        },
+        EN: {
+            gTitle: "🛡️ How it works?",
+            g1: "1. Tap the scan button.",
+            g2: "2. Point the camera at the barcode.",
+            g3: "3. Read the explained warnings below.",
+            scanBtn: "SCAN PRODUCT",
+            placeholder: "Manual code...",
+            searching: "🔍 Analyzing product...",
+            notFound: "❌ Product not found in any database.",
+            safeMsg: "✅ No major dangerous substances detected.",
+            rawLabel: "Raw label (Ingredients):"
+        }
+    };
+
+    let currentLang = 'RO';
+
+    function toggleLang() {
+        currentLang = currentLang === 'RO' ? 'EN' : 'RO';
+        document.getElementById('langBtn').innerText = currentLang;
         
+        // Update UI
+        document.getElementById('ui-guide-title').innerText = uiText[currentLang].gTitle;
+        document.getElementById('ui-guide-1').innerText = uiText[currentLang].g1;
+        document.getElementById('ui-guide-2').innerText = uiText[currentLang].g2;
+        document.getElementById('ui-guide-3').innerText = uiText[currentLang].g3;
+        document.getElementById('ui-scan-btn').innerText = uiText[currentLang].scanBtn;
+        document.getElementById('manualCode').placeholder = uiText[currentLang].placeholder;
+    }
+
+    // --- 3. LOGICA DE SCANARE ---
+    function openScanner() {
         document.getElementById('scanner-container').style.display = 'block';
         Quagga.init({
             inputStream: { name: "Live", type: "LiveStream", target: document.querySelector('#interactive'), constraints: { facingMode: "environment" } },
-            decoder: { readers: ["ean_reader", "ean_8_reader", "upc_reader", "code_128_reader"] }, // Citim toate codurile
-            locate: true // Activeaza localizarea pentru o citire mai precisa
-        }, (err) => { if(!err) Quagga.start(); else alert("Eroare camera!"); });
+            decoder: { readers: ["ean_reader", "upc_reader", "ean_8_reader", "code_128_reader"] }
+        }, (err) => { if(!err) Quagga.start(); });
 
-        Quagga.onDetected((res) => { closeCam(); fetchData(res.codeResult.code); });
+        Quagga.onDetected((res) => { 
+            closeScanner(); 
+            processBarcode(res.codeResult.code); 
+        });
     }
 
-    function closeCam() { Quagga.stop(); document.getElementById('scanner-container').style.display = 'none'; }
+    function closeScanner() { 
+        Quagga.stop(); 
+        document.getElementById('scanner-container').style.display = 'none'; 
+    }
 
-    // ===== CONEXIUNE UNIVERSALA BAZA DE DATE (OFF/OBF) =====
-    async function fetchData(code) {
+    // --- 4. EXTRAGERE DATE (CU FALLBACK) ȘI ANALIZĂ ---
+    async function processBarcode(code) {
         if(!code) return;
-        
-        // Ascundem ghidul daca e vizibil
-        document.getElementById('guide-card').style.display = 'none';
-        
-        const out = document.getElementById('results-area');
-        out.innerHTML = `<div class="result-main-card" style="text-align:center;">${UI_TXT.searching}<br><small>${code}</small></div>`;
+        const resArea = document.getElementById('result-area');
+        resArea.innerHTML = `<div class="res-card" style="text-align:center;">${uiText[currentLang].searching}</div>`;
 
-        // Incercam Food, apoi Beauty. OFF include acum multe cosmetice.
+        // FALLBACK: Caută în v2, apoi în v1 (vechi dar robust), apoi beauty.
         const endpoints = [
-            `https://world.openfoodfacts.org/api/v2/product/${code}.json?lc=ro&fields=product_name,brands,ingredients_text_ro,ingredients_text_en,ingredients_text,nutrition_grades,nutriscore_grade`,
-            `https://world.openbeautyfacts.org/api/v0/product/${code}.json?lc=ro`
+            `https://world.openfoodfacts.org/api/v2/product/${code}.json`,
+            `https://world.openfoodfacts.org/api/v0/product/${code}.json`,
+            `https://world.openbeautyfacts.org/api/v0/product/${code}.json`
         ];
 
-        let foundData = null;
+        let foundProduct = null;
+
         for (let url of endpoints) {
             try {
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data.status === 1 || data.status === "found") { //OFF v2 foloseste status=1
-                    foundData = data.product;
-                    break; // Am gasit produsul, ne oprim
+                let response = await fetch(url);
+                let data = await response.json();
+                if (data.status === 1 || data.code) {
+                    foundProduct = data.product;
+                    break; // Oprește căutarea dacă l-a găsit
                 }
-            } catch (e) { console.log("Database fetch switch..."); }
+            } catch (e) { console.log("Trecem la următoarea bază de date..."); }
         }
 
-        if (foundData) {
-            renderResults(foundData);
+        if (foundProduct) {
+            renderResult(foundProduct);
         } else {
-            out.innerHTML = `<div class="result-main-card">❌ <b>Eroare:</b> ${UI_TXT.notFound} <br> <small>${code}</small></div>`;
+            resArea.innerHTML = `<div class="res-card">${uiText[currentLang].notFound}<br><br><small>Cod căutat: ${code}</small></div>`;
         }
     }
 
-    // ===== ANALIZA AUTOMATA SI AFISARE REZULTATE =====
-    function renderResults(p) {
-        // Preluam ingredientele in ordinea preferintei limbii (RO, apoi restul)
-        const ingredientsTextRaw = p.ingredients_text_ro || p.ingredients_text_en || p.ingredients_text || "";
-        
-        // --- MOTOR DE AVERTISMENTE ---
-        let harmfulHtml = "";
-        let harmfulCount = 0;
-        
-        if (ingredientsTextRaw) {
-            const lowIng = ingredientsTextRaw.toLowerCase();
-            
-            // Scanam baza de date interna de noxe in lista de ingrediente
-            harmfulDb.forEach(noxa => {
-                if (noxa.regex.test(lowIng)) {
-                    harmfulHtml += `
-                        <div class="harmful-item">
-                            <b>⚠️ ${noxa.name}</b>
-                            <span>DĂUNEAZĂ: ${noxa.ro}</span>
-                        </div>
-                    `;
-                    harmfulCount++;
-                }
-            });
+    function renderResult(p) {
+        // Extrage ingredientele (încearcă limba curentă, altfel ia varianta de bază, ex: germana pt Haribo)
+        const langKey = currentLang.toLowerCase();
+        let rawIngredients = p[`ingredients_text_${langKey}`] || p.ingredients_text || "Nu s-au putut extrage ingredientele de pe ambalaj.";
+        let searchString = rawIngredients.toLowerCase();
+
+        // 4.1 ANALIZA CHIMICĂ (Motorul tău de avertismente)
+        let warningsHTML = "";
+        let hasToxins = false;
+
+        toxinDB.forEach(toxin => {
+            // Verificăm dacă vreun keyword (zucker, sugar, chinin, etc) există în eticheta brută
+            let isPresent = toxin.keywords.some(kw => searchString.includes(kw));
+            if (isPresent) {
+                hasToxins = true;
+                let warningData = toxin.warnings[currentLang];
+                warningsHTML += `
+                    <div class="warning-item">
+                        <div class="warning-title">${warningData.title}</div>
+                        <div class="warning-desc">${warningData.desc}</div>
+                    </div>
+                `;
+            }
+        });
+
+        if (!hasToxins && rawIngredients.length > 20) {
+            warningsHTML = `<div class="safe-msg">${uiText[currentLang].safeMsg}</div>`;
+        } else if (!hasToxins) {
+            warningsHTML = ``; // Nu afișa nimic dacă nu sunt ingrediente deloc
         }
 
-        // --- NutriScore stilizat ---
-        const rawScore = p.nutrition_grades || p.nutriscore_grade || "";
-        const score = rawScore.toUpperCase();
-        let scoreClass = "";
-        if (score === 'A' || score === 'B') scoreClass = 'score-A';
-        else if (score === 'C' || score === 'D') scoreClass = 'score-C';
-        else if (score === 'E') scoreClass = 'score-E';
+        // 4.2 GENERARE INTERFAȚĂ REZULTAT
+        const grade = (p.nutrition_grades || p.nutriscore_grade || "?").toUpperCase();
+        const resArea = document.getElementById('result-area');
 
-        // --- Generare HTML Rezultat ---
-        document.getElementById('results-area').innerHTML = `
-            <div class="result-main-card">
-                ${rawScore ? `<div class="score-row">
-                    <span class="score-badge ${scoreClass}">${score}</span>
-                    <div><b>${UI_TXT.grade} ${score}</b> <br> <small style="opacity:0.6;">(Nutri-Score Oficial)</small></div>
-                </div>` : ''}
-
-                <h2 style="color:var(--green); margin-bottom:5px;">${p.product_name || 'Produs Necunoscut'}</h2>
-                <p style="opacity:0.8; font-size:0.9rem; margin-bottom:15px;">${UI_TXT.brand} <b>${p.brands || 'Necunoscut'}</b></p>
+        resArea.innerHTML = `
+            <div class="res-card">
+                <div class="score-badge">Scor: ${grade}</div>
+                <h2 style="margin-bottom:5px;">${p.product_name || 'Produs'}</h2>
+                <p style="color:var(--green); font-weight:bold; font-size:0.9rem;">${p.brands || ''}</p>
                 
-                <span class="section-label">${UI_TXT.warnings}</span>
-                <div>
-                    ${harmfulCount > 0 ? harmfulHtml : `<p class="no-toxin">Nicio substanță nocivă cunoscută nu a fost detectată în acest produs! ✅</p>`}
+                <div class="warnings-container">
+                    ${warningsHTML}
                 </div>
-                
-                <span class="section-label">${UI_TXT.ingredients}</span>
-                <div class="ing-raw-text">
-                    ${ingredientsTextRaw || `<p style="opacity:0.5;">Lista de ingrediente nu este disponibilă pentru acest cod în baza de date globală.</p>`}
+
+                <div class="raw-ingredients">
+                    <strong style="color:var(--text);">${uiText[currentLang].rawLabel}</strong><br>
+                    ${rawIngredients}
                 </div>
             </div>
         `;
     }
+
+    // Inițializare UI la prima încărcare
+    toggleLang(); toggleLang(); 
 </script>
 </body>
 </html>
