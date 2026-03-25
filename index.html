@@ -18,12 +18,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
         body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
         
-        /* HEADER */
-        header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+        /* HEADER & LOGO */
+        header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center; position: sticky; top: 0; background: var(--bg); z-index: 100; }
         .logo-img { width: 55px; height: 55px; border-radius: 14px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,214,143,0.2); }
         .fallback-shield { width: 55px; height: 55px; border-radius: 14px; background: rgba(0,214,143,0.1); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         
-        .lang-btn { position: absolute; right: 20px; background: #222; color: var(--green); border: 1px solid var(--green); padding: 6px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        /* BUTON LIMBĂ */
+        .lang-btn { position: absolute; right: 20px; background: #222; color: var(--green); border: 1px solid var(--green); padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
 
         .content { padding: 20px; max-width: 500px; margin: 0 auto; }
 
@@ -32,21 +33,19 @@
         .guide-title { font-size: 1rem; color: var(--green); font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         .guide-text { font-size: 0.85rem; color: #ccc; line-height: 1.6; margin-bottom: 15px; }
         
-        .legend-box { display: flex; flex-direction: column; gap: 6px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; }
-        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 600; color: #ddd; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .legend-box { display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; font-weight: 600; color: #ddd; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
 
-        /* BUTOANE */
-        .scan-btn { width: 100%; background: var(--green); color: #000; border: none; border-radius: 18px; padding: 20px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 8px 25px rgba(0, 214, 143, 0.25); display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.1s; }
-        .scan-btn:active { transform: scale(0.98); }
-        
+        /* BUTOANE SCAN & MANUAL */
+        .scan-btn { width: 100%; background: var(--green); color: #000; border: none; border-radius: 18px; padding: 20px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 8px 25px rgba(0, 214, 143, 0.25); display: flex; align-items: center; justify-content: center; gap: 10px; }
         .input-row { display: flex; gap: 10px; margin-top: 20px; }
         .input-row input { flex: 1; background: #111; border: 1px solid #333; padding: 16px; border-radius: 12px; color: #fff; font-size: 1rem; outline: none; }
         .go-btn { background: #222; color: var(--green); border: 1px solid var(--green); padding: 0 25px; border-radius: 12px; font-weight: bold; }
 
         /* REZULTATE */
         .res-card { background: var(--card); border-radius: 24px; padding: 25px; margin-top: 25px; border: 1px solid rgba(255,255,255,0.05); animation: slideUp 0.3s ease; }
-        .badge { display: inline-block; padding: 6px 16px; border-radius: 8px; font-weight: 900; color: #000; margin-bottom: 15px; font-size: 1.1rem; }
+        .badge { display: inline-block; padding: 8px 18px; border-radius: 10px; font-weight: 900; color: #000; margin-bottom: 15px; font-size: 1.2rem; }
         
         .grade-a, .grade-b { background: var(--green); }
         .grade-c { background: var(--yellow); }
@@ -54,25 +53,24 @@
         .grade-e { background: var(--red); color: #fff; }
         .grade-unknown { background: #444; color: #fff; }
 
-        /* AVERTISMENTE (Carduri medicale) */
+        /* AVERTISMENTE MEDICALE */
         .toxin-title { font-size: 0.85rem; font-weight: bold; color: var(--green); margin: 20px 0 10px 0; text-transform: uppercase; letter-spacing: 1px; }
         .warning-item { background: rgba(255, 71, 87, 0.08); border-left: 4px solid var(--red); padding: 15px; margin-bottom: 10px; border-radius: 0 12px 12px 0; }
         .warning-name { color: var(--red); font-weight: bold; font-size: 0.95rem; margin-bottom: 4px; }
         .warning-desc { font-size: 0.85rem; color: #ddd; line-height: 1.4; }
         .safe-msg { background: rgba(0, 214, 143, 0.1); color: var(--green); padding: 15px; border-radius: 12px; font-weight: bold; font-size: 0.9rem; text-align: center; margin-bottom: 10px; }
-
         .raw-ingredients { font-size: 0.8rem; color: #999; border-top: 1px dashed #333; padding-top: 15px; line-height: 1.6; }
 
         /* CAMERA PRO & LASER ANIMAT */
         #scanner-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; }
         #interactive.viewport video { width: 100%; height: 100%; object-fit: cover; }
-        .camera-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; background: rgba(0,0,0,0.4); }
+        .camera-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; background: rgba(0,0,0,0.5); }
         
-        .reticle { width: 280px; height: 180px; border: 3px solid rgba(0,214,143,0.8); border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 0 0 4000px rgba(0,0,0,0.6); }
+        .reticle { width: 280px; height: 180px; border: 3px solid rgba(0,214,143,0.8); border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 0 0 4000px rgba(0,0,0,0.7); }
         .laser { width: 100%; height: 3px; background: var(--red); position: absolute; top: 0; left: 0; box-shadow: 0 0 15px var(--red); animation: scanLaser 2s infinite ease-in-out; }
         
-        .cam-text { color: white; font-weight: bold; margin-top: 30px; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .close-cam { position: absolute; bottom: 50px; background: rgba(255,255,255,0.15); color: white; border: 2px solid white; padding: 15px 40px; border-radius: 30px; font-weight: bold; font-size: 1rem; pointer-events: auto; backdrop-filter: blur(5px); }
+        .cam-text { color: white; font-weight: bold; margin-top: 30px; letter-spacing: 1px; }
+        .close-cam { position: absolute; bottom: 50px; background: rgba(255,255,255,0.15); color: white; border: 2px solid white; padding: 15px 40px; border-radius: 30px; font-weight: bold; pointer-events: auto; backdrop-filter: blur(5px); }
 
         @keyframes scanLaser { 0% { top: 5%; } 50% { top: 95%; } 100% { top: 5%; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -83,7 +81,7 @@
 <header>
     <img id="dynamicLogo" src="logo.png" class="logo-img" alt="Logo" onerror="this.style.display='none'; document.getElementById('fallbackShield').style.display='flex';">
     <div id="fallbackShield" class="fallback-shield" style="display:none;">🛡️</div>
-    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+    <button class="lang-btn" onclick="cycleLang()" id="langBtn">RO</button>
 </header>
 
 <div class="content">
@@ -121,91 +119,53 @@
 </div>
 
 <script>
-    // Forțăm încărcarea logo-ului ocolind cache-ul telefonului
-    document.getElementById('dynamicLogo').src = 'logo.png?v=' + new Date().getTime();
+    // Forțăm logo.png să se actualizeze ignorând memoria telefonului
+    document.getElementById('dynamicLogo').src = 'logo.png?v=' + Date.now();
 
-    // --- 1. SISTEMUL LINGVISTIC CENTRALIZAT (Aici e tot textul aplicației) ---
+    // --- 1. SISTEMUL LINGVISTIC (RO, EN, FR, DE) ---
     const i18n = {
         RO: {
-            gTitle: "🛡️ Cum funcționează?",
-            gText: "1. Apasă pe scanare.<br>2. Îndreaptă camera spre cod.<br>3. Află avertismentele medicale.",
-            legA: "Clasa A/B: Sănătos, fără riscuri.",
-            legC: "Clasa C: Echilibrat, consum moderat.",
-            legD: "Clasa D: Nerecomandat zilnic (zahăr/grăsimi).",
-            legE: "Clasa E: Extrem de nociv, de evitat!",
-            scanBtn: "SCANEAZĂ PRODUS",
-            manualPlh: "Cod manual...",
-            searching: "🔍 Analizăm în bazele de date globale...",
-            notFound: "❌ Produsul nu a fost găsit. Verifică codul.",
-            medTitle: "🔬 Analiza Medicală:",
-            safeMsg: "✅ Nicio substanță nocivă majoră detectată.",
-            rawTitle: "Eticheta brută:",
-            noIng: "Ingrediente indisponibile în baza de date.",
-            camText: "CENTRAȚI CODUL ÎN CADRU",
-            closeBtn: "ÎNCHIDE"
+            gTitle: "🛡️ Cum funcționează?", gText: "1. Apasă pe scanare.<br>2. Îndreaptă camera spre cod.<br>3. Află avertismentele medicale.",
+            legA: "Clasa A/B: Sănătos, fără riscuri.", legC: "Clasa C: Echilibrat, consum moderat.", legD: "Clasa D: Nerecomandat zilnic (zahăr/grăsimi).", legE: "Clasa E: Extrem de nociv, de evitat!",
+            scanBtn: "SCANEAZĂ PRODUS", manualPlh: "Cod manual...", searching: "🔍 Analizăm bazele de date globale...", notFound: "❌ Produsul nu a fost găsit. Verifică codul.",
+            medTitle: "🔬 Analiza Medicală:", safeMsg: "✅ Nicio substanță nocivă majoră detectată.", rawTitle: "Eticheta brută:", noIng: "Ingrediente indisponibile în baza de date.",
+            camText: "CENTRAȚI CODUL ÎN CADRU", closeBtn: "ÎNCHIDE"
         },
         EN: {
-            gTitle: "🛡️ How it works?",
-            gText: "1. Tap scan.<br>2. Point camera at barcode.<br>3. Read medical warnings.",
-            legA: "Class A/B: Healthy, low risk.",
-            legC: "Class C: Balanced, moderate intake.",
-            legD: "Class D: Not recommended daily.",
-            legE: "Class E: Extremely harmful, avoid!",
-            scanBtn: "SCAN PRODUCT",
-            manualPlh: "Manual code...",
-            searching: "🔍 Analyzing global databases...",
-            notFound: "❌ Product not found. Check the code.",
-            medTitle: "🔬 Medical Analysis:",
-            safeMsg: "✅ No major harmful substances detected.",
-            rawTitle: "Raw label:",
-            noIng: "Ingredients unavailable in database.",
-            camText: "CENTER BARCODE IN FRAME",
-            closeBtn: "CLOSE"
+            gTitle: "🛡️ How it works?", gText: "1. Tap scan.<br>2. Point camera at barcode.<br>3. Read medical warnings.",
+            legA: "Class A/B: Healthy, low risk.", legC: "Class C: Balanced, moderate intake.", legD: "Class D: Not recommended daily.", legE: "Class E: Extremely harmful, avoid!",
+            scanBtn: "SCAN PRODUCT", manualPlh: "Manual code...", searching: "🔍 Analyzing global databases...", notFound: "❌ Product not found. Check the code.",
+            medTitle: "🔬 Medical Analysis:", safeMsg: "✅ No major harmful substances detected.", rawTitle: "Raw label:", noIng: "Ingredients unavailable in database.",
+            camText: "CENTER BARCODE IN FRAME", closeBtn: "CLOSE"
+        },
+        FR: {
+            gTitle: "🛡️ Comment ça marche?", gText: "1. Appuyez sur scanner.<br>2. Pointez la caméra.<br>3. Lisez les avertissements.",
+            legA: "Classe A/B: Sain, sans risque.", legC: "Classe C: Équilibré, à modérer.", legD: "Classe D: Déconseillé au quotidien.", legE: "Classe E: Très nocif, à éviter!",
+            scanBtn: "SCANNER LE PRODUIT", manualPlh: "Code manuel...", searching: "🔍 Analyse en cours...", notFound: "❌ Produit introuvable.",
+            medTitle: "🔬 Analyse Médicale:", safeMsg: "✅ Aucune substance nocive détectée.", rawTitle: "Étiquette brute:", noIng: "Ingrédients non disponibles.",
+            camText: "CENTREZ LE CODE-BARRES", closeBtn: "FERMER"
+        },
+        DE: {
+            gTitle: "🛡️ Wie es funktioniert?", gText: "1. Scannen drücken.<br>2. Kamera auf Barcode richten.<br>3. Warnungen lesen.",
+            legA: "Klasse A/B: Gesund, geringes Risiko.", legC: "Klasse C: Ausgewogen, in Maßen.", legD: "Klasse D: Nicht täglich empfohlen.", legE: "Klasse E: Sehr schädlich, meiden!",
+            scanBtn: "PRODUKT SCANNEN", manualPlh: "Manueller Code...", searching: "🔍 Datenbank wird durchsucht...", notFound: "❌ Produkt nicht gefunden.",
+            medTitle: "🔬 Medizinische Analyse:", safeMsg: "✅ Keine schädlichen Stoffe erkannt.", rawTitle: "Rohzutaten:", noIng: "Zutaten in der Datenbank nicht verfügbar.",
+            camText: "BARCODE ZENTRIEREN", closeBtn: "SCHLIEßEN"
         }
     };
 
-    // --- 2. BAZA DE DATE MEDICALĂ INTERNĂ ---
-    const toxicDB = [
-        {
-            keywords: ['zahar', 'zahăr', 'sugar', 'zucker', 'sucre', 'glukosesirup', 'sirop', 'glucose'],
-            ro: { title: "⚠️ Zahăr / Sirop de Glucoză", desc: "Crește brusc glicemia. Consumul frecvent duce la rezistență la insulină și obezitate." },
-            en: { title: "⚠️ Sugar / Glucose Syrup", desc: "Spikes blood sugar rapidly. Leads to insulin resistance." }
-        },
-        {
-            keywords: ['chinin', 'quinine'],
-            ro: { title: "⚠️ Chinină", desc: "Alcaloid care poate provoca aritmii sau tulburări de auz. Nerecomandat gravidelor." },
-            en: { title: "⚠️ Quinine", desc: "Can cause arrhythmias or hearing issues. Not recommended during pregnancy." }
-        },
-        {
-            keywords: ['e102', 'e110', 'e129', 'colorant', 'farbstoff', 'dye'],
-            ro: { title: "🧪 Coloranți Sintetici", desc: "Anumiți coloranți artificiali sunt asociați cu hiperactivitatea la copii (ADHD) și alergii." },
-            en: { title: "🧪 Synthetic Dyes", desc: "Linked to hyperactivity in children (ADHD) and allergies." }
-        },
-        {
-            keywords: ['sorbat', 'sorbate', 'benzoat', 'benzoate', 'e202', 'e211'],
-            ro: { title: "⚠️ Conservanți (E202 / E211)", desc: "Pot irita tractul digestiv. Benzoatul este asociat cu declanșarea alergiilor." },
-            en: { title: "⚠️ Preservatives", desc: "May irritate the digestive tract. Linked to allergies." }
-        },
-        {
-            keywords: ['taurin', 'taurine'],
-            ro: { title: "⚡ Taurină", desc: "Stimulant. Suprasolicită inima și crește tensiunea arterială, mai ales cu cofeină." },
-            en: { title: "⚡ Taurine", desc: "Stimulant. Strains the heart and raises blood pressure." }
-        },
-        {
-            keywords: ['palm', 'palmier', 'palmfett'],
-            ro: { title: "🌴 Ulei de Palmier", desc: "Bogat în grăsimi saturate. Procesarea lui generează substanțe potențial cancerigene." },
-            en: { title: "🌴 Palm Oil", desc: "High in saturated fats. Processing creates potentially carcinogenic substances." }
-        }
-    ];
+    const langs = ['RO', 'EN', 'FR', 'DE'];
+    let langIndex = 0;
+    let curLang = langs[langIndex];
 
-    let currentLang = 'RO'; // Limba de start
-
-    // --- FUNCȚIA CARE ACTUALIZEAZĂ TOT ECRANUL FĂRĂ GREȘELI ---
-    function toggleLang() {
-        currentLang = currentLang === 'RO' ? 'EN' : 'RO';
-        document.getElementById('langBtn').innerText = currentLang === 'RO' ? 'EN' : 'RO'; // Butonul arata limba in care poti schimba
+    function cycleLang() {
+        langIndex = (langIndex + 1) % langs.length;
+        curLang = langs[langIndex];
         
-        const t = i18n[currentLang];
+        // Butonul arată mereu limba în care ești ACUM
+        document.getElementById('langBtn').innerText = curLang; 
+        
+        const t = i18n[curLang];
         document.getElementById('ui-guide-title').innerHTML = t.gTitle;
         document.getElementById('ui-guide-text').innerHTML = t.gText;
         document.getElementById('leg-a').innerText = t.legA;
@@ -216,32 +176,71 @@
         document.getElementById('manualInput').placeholder = t.manualPlh;
         document.getElementById('ui-cam-text').innerText = t.camText;
         document.getElementById('ui-close-btn').innerText = t.closeBtn;
-        
-        // Curatam rezultatul vechi la schimbarea limbii pentru a evita confuzii
-        document.getElementById('out').innerHTML = ""; 
+        document.getElementById('out').innerHTML = ""; // Curăță ecranul la schimbarea limbii
     }
 
-    // --- AUDIO BEEP PRO ---
+    // --- 2. BAZA DE DATE MEDICALĂ (Tradusă automat) ---
+    const toxicDB = [
+        {
+            keywords: ['zahar', 'zahăr', 'sugar', 'zucker', 'sucre', 'glukosesirup', 'sirop', 'glucose'],
+            RO: { title: "⚠️ Zahăr / Sirop de Glucoză", desc: "Crește brusc glicemia. Risc de obezitate și diabet." },
+            EN: { title: "⚠️ Sugar / Glucose Syrup", desc: "Spikes blood sugar. Risk of obesity and diabetes." },
+            FR: { title: "⚠️ Sucre / Sirop de Glucose", desc: "Augmente la glycémie. Risque d'obésité." },
+            DE: { title: "⚠️ Zucker / Glukosesirup", desc: "Erhöht den Blutzucker. Risiko für Fettleibigkeit." }
+        },
+        {
+            keywords: ['chinin', 'quinine'],
+            RO: { title: "⚠️ Chinină", desc: "Poate provoca aritmii. Nerecomandat gravidelor." },
+            EN: { title: "⚠️ Quinine", desc: "Can cause arrhythmias. Not recommended during pregnancy." },
+            FR: { title: "⚠️ Quinine", desc: "Peut causer des arythmies. Déconseillé aux femmes enceintes." },
+            DE: { title: "⚠️ Chinin", desc: "Kann Herzrhythmusstörungen verursachen. Nicht für Schwangere." }
+        },
+        {
+            keywords: ['e102', 'e110', 'e129', 'e133', 'colorant', 'farbstoff', 'dye'],
+            RO: { title: "🧪 Coloranți Sintetici", desc: "Asociați cu hiperactivitatea la copii (ADHD) și alergii." },
+            EN: { title: "🧪 Synthetic Dyes", desc: "Linked to hyperactivity in children (ADHD) and allergies." },
+            FR: { title: "🧪 Colorants Synthétiques", desc: "Liés à l'hyperactivité chez les enfants et aux allergies." },
+            DE: { title: "🧪 Synthetische Farbstoffe", desc: "Verbunden mit Hyperaktivität bei Kindern und Allergien." }
+        },
+        {
+            keywords: ['sorbat', 'sorbate', 'benzoat', 'benzoate', 'e202', 'e211'],
+            RO: { title: "⚠️ Conservanți (E202 / E211)", desc: "Pot irita tractul digestiv. Asociați cu declanșarea alergiilor." },
+            EN: { title: "⚠️ Preservatives", desc: "May irritate the digestive tract. Linked to allergies." },
+            FR: { title: "⚠️ Conservateurs", desc: "Peuvent irriter le tube digestif. Liés aux allergies." },
+            DE: { title: "⚠️ Konservierungsstoffe", desc: "Können den Verdauungstrakt reizen. Verbunden mit Allergien." }
+        },
+        {
+            keywords: ['taurin', 'taurine'],
+            RO: { title: "⚡ Taurină", desc: "Stimulant puternic. Suprasolicită inima și crește tensiunea." },
+            EN: { title: "⚡ Taurine", desc: "Strong stimulant. Strains the heart and raises blood pressure." },
+            FR: { title: "⚡ Taurine", desc: "Stimulant puissant. Fatigué le cœur et augmente la tension." },
+            DE: { title: "⚡ Taurin", desc: "Starkes Stimulans. Belastet das Herz und erhöht den Blutdruck." }
+        },
+        {
+            keywords: ['palm', 'palmier', 'palmfett'],
+            RO: { title: "🌴 Ulei de Palmier", desc: "Bogat în grăsimi saturate. Dăunează sistemului cardiovascular." },
+            EN: { title: "🌴 Palm Oil", desc: "High in saturated fats. Bad for cardiovascular health." },
+            FR: { title: "🌴 Huile de Palme", desc: "Riche en graisses saturées. Mauvais pour la santé cardiovasculaire." },
+            DE: { title: "🌴 Palmöl", desc: "Reich an gesättigten Fettsäuren. Schlecht für das Herz-Kreislauf-System." }
+        }
+    ];
+
+    // --- 3. BEEP SONOR & VIBRAȚIE ---
     function playBeep() {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, ctx.currentTime); // Frecvența beep-ului
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.type = 'sine'; osc.frequency.setValueAtTime(800, ctx.currentTime);
             gain.gain.setValueAtTime(0.1, ctx.currentTime);
-            osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1);
+            osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1);
             osc.stop(ctx.currentTime + 0.1);
         } catch(e) {}
-        
-        // Vibrație Haptică (Dacă telefonul permite)
         if (navigator.vibrate) navigator.vibrate(50);
     }
 
-    // --- SCANNER ---
+    // --- 4. SCANNER PRO ---
     function openCam() {
         document.getElementById('scanner-container').style.display = 'block';
         Quagga.init({
@@ -252,25 +251,25 @@
         }, (err) => { if(!err) Quagga.start(); });
 
         Quagga.onDetected((res) => { 
-            playBeep(); // BEEP la detectare
+            playBeep(); 
             closeCam(); 
             fetchData(res.codeResult.code); 
         });
     }
-
     function closeCam() { Quagga.stop(); document.getElementById('scanner-container').style.display = 'none'; }
 
-    // --- FETCH DATE & RENDER ---
+    // --- 5. MOTORUL DE CĂUTARE (Cascadă pe 4 Baze de Date) ---
     async function fetchData(code) {
         if(!code) return;
         const out = document.getElementById('out');
-        const t = i18n[currentLang];
+        const t = i18n[curLang];
         out.innerHTML = `<p style="text-align:center; padding:20px;">${t.searching}</p>`;
 
-        // Lanț de Fallback pentru a găsi orice produs
         const endpoints = [
-            `https://world.openfoodfacts.org/api/v0/product/${code}.json`,
-            `https://world.openbeautyfacts.org/api/v0/product/${code}.json`
+            `https://world.openfoodfacts.org/api/v2/product/${code}.json`,  // 1. Food Nou
+            `https://world.openfoodfacts.org/api/v0/product/${code}.json`,  // 2. Food Vechi (Rezervă)
+            `https://world.openbeautyfacts.org/api/v0/product/${code}.json`,// 3. Cosmetice
+            `https://world.openproductsfacts.org/api/v0/product/${code}.json`// 4. Alte produse
         ];
 
         let foundProd = null;
@@ -278,7 +277,7 @@
             try {
                 let r = await fetch(url);
                 let d = await r.json();
-                if (d.status === 1) { foundProd = d.product; break; }
+                if (d.status === 1 || d.code) { foundProd = d.product; break; }
             } catch (e) {}
         }
 
@@ -288,16 +287,14 @@
             // Calcul Avertismente
             let toxinHTML = "";
             let hasToxins = false;
-            
             if (ingRaw) {
                 toxicDB.forEach(tox => {
                     if (tox.keywords.some(kw => ingRaw.includes(kw))) {
                         hasToxins = true;
-                        let warningData = currentLang === 'RO' ? tox.ro : tox.en;
                         toxinHTML += `
                             <div class="warning-item">
-                                <div class="warning-name">${warningData.title}</div>
-                                <div class="warning-desc">${warningData.desc}</div>
+                                <div class="warning-name">${tox[curLang].title}</div>
+                                <div class="warning-desc">${tox[curLang].desc}</div>
                             </div>`;
                     }
                 });
@@ -332,17 +329,9 @@
         }
     }
 
-    // Inițializare UI la start
-    document.getElementById('ui-guide-title').innerHTML = i18n['RO'].gTitle;
-    document.getElementById('ui-guide-text').innerHTML = i18n['RO'].gText;
-    document.getElementById('leg-a').innerText = i18n['RO'].legA;
-    document.getElementById('leg-c').innerText = i18n['RO'].legC;
-    document.getElementById('leg-d').innerText = i18n['RO'].legD;
-    document.getElementById('leg-e').innerText = i18n['RO'].legE;
-    document.getElementById('ui-scan-btn').innerText = i18n['RO'].scanBtn;
-    document.getElementById('manualInput').placeholder = i18n['RO'].manualPlh;
-    document.getElementById('ui-cam-text').innerText = i18n['RO'].camText;
-    document.getElementById('ui-close-btn').innerText = i18n['RO'].closeBtn;
+    // Pornește cu interfața încărcată corect
+    document.getElementById('langBtn').innerText = curLang;
+    cycleLang(); cycleLang(); cycleLang(); cycleLang(); // Truc rapid ca să inițializeze corect RO
 </script>
 </body>
 </html>
