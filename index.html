@@ -3,334 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SafeFood Pro | Premium Scanner</title>
+    <title>SafeFood Pro | Premium Final</title>
     
     <script src="https://unpkg.com/@zxing/library@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --p-green: #2ecc71;
-            --p-dark: #0f172a;
-            --p-glass: rgba(255, 255, 255, 0.08);
-            --p-border: rgba(255, 255, 255, 0.1);
-            --safe-area-bottom: env(safe-area-inset-bottom);
+            --p-green: #2ecc71; --p-red: #ef4444; --p-orange: #f39c12; --p-dark: #0f172a;
+            --p-glass: rgba(255, 255, 255, 0.08); --p-border: rgba(255, 255, 255, 0.1);
+            --safe-bottom: env(safe-area-inset-bottom); --text: #ffffff;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #ffffff;
-            height: 100vh;
-            overflow: hidden;
+        [data-theme='light'] {
+            --p-dark: #f8fafc; --p-glass: rgba(15, 23, 42, 0.05); --p-border: rgba(15, 23, 42, 0.1); --text: #1e293b;
         }
+        body { background: var(--p-dark); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; margin: 0; transition: 0.3s; }
 
-        /* --- LOADING SCREEN / SPLASH --- */
-        #splash {
-            position: fixed; inset: 0; z-index: 1000;
-            background: linear-gradient(180deg, #166534 0%, #064e3b 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.6s ease;
-        }
+        /* VIEWS MANAGEMENT */
+        .view { display: none; height: calc(100vh - 85px - var(--safe-bottom)); overflow-y: auto; padding: 60px 20px 20px; }
+        .view.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        #view-scanner.active { display: flex; flex-direction: column; padding: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .logo-container {
-            text-align: center;
-            animation: fadeInScale 1s ease-out;
-        }
-
-        .shield-logo {
-            width: 100px; height: 100px; background: var(--p-glass);
-            border: 2px solid var(--p-green); border-radius: 28px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px; backdrop-filter: blur(10px);
-        }
-
-        /* --- APP STRUCTURE --- */
-        .app-container { display: none; height: 100vh; flex-direction: column; }
-        .app-container.active { display: flex; }
-
-        /* --- SCANNER VIEW --- */
-        #scanner-view { position: relative; flex: 1; overflow: hidden; background: #000; }
+        /* SCANNER ELEMENT */
+        #scanner-container { position: relative; flex: 1; background: #000; overflow: hidden; }
         #video { width: 100%; height: 100%; object-fit: cover; }
+        .reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; height: 180px; border: 2px solid var(--p-green); border-radius: 24px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.6); z-index: 5; }
+        .laser { position: absolute; width: 100%; height: 3px; background: var(--p-green); box-shadow: 0 0 15px var(--p-green); animation: laserMove 2s infinite linear; }
+        @keyframes laserMove { 0%, 100% { top: 0; } 50% { top: 100%; } }
 
-        .scan-overlay {
-            position: absolute; inset: 0;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .reticle {
-            width: 280px; height: 180px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 24px; position: relative;
-            box-shadow: 0 0 0 2000px rgba(0,0,0,0.6);
-            overflow: hidden;
-        }
-
-        .reticle::before {
-            content: ''; position: absolute; width: 100%; height: 4px;
-            background: var(--p-green); box-shadow: 0 0 20px var(--p-green);
-            animation: scanMove 2.5s infinite ease-in-out;
-        }
-
-        @keyframes scanMove {
-            0% { top: 0%; }
-            50% { top: 100%; }
-            100% { top: 0%; }
-        }
-
-        /* --- BOTTOM NAVIGATION (Claude Style) --- */
-        .nav-bar {
-            height: calc(85px + var(--safe-area-bottom));
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--p-border);
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            padding-bottom: var(--safe-area-bottom);
-        }
-
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 10px; color: #94a3b8; gap: 5px; cursor: pointer;
-        }
-
+        /* BOTTOM NAVIGATION */
+        .nav { position: fixed; bottom: 0; width: 100%; height: calc(85px + var(--safe-bottom)); background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--p-border); display: grid; grid-template-columns: repeat(5, 1fr); padding-bottom: var(--safe-bottom); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8; gap: 4px; border: none; background: none; cursor: pointer; }
         .nav-item.active { color: var(--p-green); }
+        .scan-circle { width: 55px; height: 55px; background: var(--p-green); border-radius: 18px; margin-top: -30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4); border: 4px solid var(--p-dark); color: white; }
 
-        .scan-btn-main {
-            width: 55px; height: 55px; background: var(--p-green);
-            border-radius: 18px; display: flex; align-items: center; justify-content: center;
-            margin-top: -30px; box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
-        }
+        /* PRODUCT SHEET */
+        #sheet { position: fixed; bottom: 0; left: 0; width: 100%; height: 90vh; background: #111827; border-radius: 35px 35px 0 0; z-index: 2000; transform: translateY(100%); transition: 0.5s cubic-bezier(0.33, 1, 0.68, 1); padding: 25px; overflow-y: auto; border-top: 1px solid var(--p-border); color: white; }
+        #sheet.open { transform: translateY(0); }
+        .score-badge { width: 85px; height: 85px; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 800; border: 4px solid var(--p-border); }
+        .sc-A { background: #166534; color: #4ade80; } .sc-D { background: #7f1d1d; color: #f87171; }
 
-        /* --- PRODUCT SHEET (Premium Glass) --- */
-        #product-sheet {
-            position: fixed; bottom: 0; width: 100%; height: 85vh;
-            background: rgba(15, 23, 42, 0.98);
-            backdrop-filter: blur(30px);
-            border-top: 1px solid var(--p-border);
-            border-radius: 40px 40px 0 0;
-            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
-            z-index: 500; overflow-y: auto; padding: 30px;
-        }
-
-        #product-sheet.open { transform: translateY(0); }
-
-        .score-circle {
-            width: 90px; height: 90px; border-radius: 50%;
-            margin: 20px auto; display: flex; align-items: center; justify-content: center;
-            font-size: 40px; font-weight: 800; border: 4px solid var(--p-border);
-        }
-
-        .warning-box {
-            background: rgba(239, 68, 68, 0.15);
-            border-left: 4px solid #ef4444;
-            padding: 15px; border-radius: 12px; margin: 20px 0;
-            display: flex; align-items: center; gap: 10px;
-        }
-
-        /* --- SCORING COLORS --- */
-        .score-A { background: #166534; color: #fff; box-shadow: 0 0 30px rgba(22, 101, 52, 0.5); }
-        .score-B { background: #15803d; color: #fff; }
-        .score-C { background: #ca8a04; color: #fff; }
-        .score-D { background: #b91c1c; color: #fff; }
-        .score-E { background: #7f1d1d; color: #fff; }
-
-        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .info-card { background: var(--p-glass); padding: 15px; border-radius: 18px; border: 1px solid var(--p-border); }
-        .info-card span { display: block; font-size: 11px; color: #94a3b8; text-transform: uppercase; }
-        .info-card strong { font-size: 16px; margin-top: 4px; display: block; }
-
+        /* CARDS & COMPONENTS */
+        .card { background: var(--p-glass); border-radius: 20px; padding: 18px; border: 1px solid var(--p-border); margin-bottom: 12px; }
+        .tag { display: inline-block; padding: 5px 12px; border-radius: 10px; font-size: 11px; background: var(--p-border); margin: 3px; font-weight: 600; }
+        .btn-p { width: 100%; padding: 18px; border-radius: 18px; border: none; background: var(--p-green); color: white; font-weight: 800; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div id="splash" onclick="startApp()">
-        <div class="logo-container">
-            <div class="shield-logo">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="M9 12l2 2 4-4"/>
-                </svg>
-            </div>
-            <h1 style="font-weight: 800; letter-spacing: -1px; font-size: 32px;">SafeFood Pro</h1>
-            <p style="opacity: 0.6; font-size: 12px; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px;">Mâncare Sigură • Viață Sănătoasă</p>
-            <p style="margin-top: 40px; font-size: 14px; animation: pulse 2s infinite;">Atinge pentru a începe</p>
-        </div>
-    </div>
-
-    <div id="app" class="app-container">
-        <div style="padding: 60px 20px 20px; display: flex; justify-content: space-between; align-items: center;">
-            <div id="status-dot" style="display:flex; align-items:center; gap:8px; font-size: 12px; color: #94a3b8;">
-                <span style="width:8px; height:8px; background:var(--p-green); border-radius:50%;"></span> Camera Activă
-            </div>
-            <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--p-glass); display: flex; align-items: center; justify-content: center;">👤</div>
-        </div>
-
-        <div id="scanner-view">
+    <div id="view-scanner" class="view active">
+        <div id="scanner-container">
             <video id="video"></video>
-            <div class="scan-overlay">
-                <div class="reticle"></div>
-                <p style="margin-top: 30px; font-weight: 600; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">Scanează codul de bare</p>
-            </div>
-        </div>
-
-        <div class="nav-bar">
-            <div class="nav-item"><span>🕒</span>Istoric</div>
-            <div class="nav-item"><span>❤️</span>Favorite</div>
-            <div class="nav-item active">
-                <div class="scan-btn-main">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                        <path d="M3 7V5a2 2 0 0 1 2-2h2m10 0h2a2 2 0 0 1 2 2v2m0 10v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"></path>
-                    </svg>
-                </div>
-                <span>Scanează</span>
-            </div>
-            <div class="nav-item"><span>📖</span>Ghid</div>
-            <div class="nav-item" onclick="location.reload()"><span>⚙️</span>Setări</div>
+            <div class="reticle"><div class="laser"></div></div>
+            <div style="position:absolute; top:50px; width:100%; text-align:center; z-index:10;"><h2 data-i18n="app_name">SafeFood Pro</h2></div>
         </div>
     </div>
 
-    <div id="product-sheet">
-        <div style="width: 50px; height: 5px; background: var(--p-border); border-radius: 10px; margin: 0 auto 30px;" onclick="closeSheet()"></div>
-        
-        <div id="sheet-content">
-            <div style="text-align: center;">
-                <img id="p-img" src="" style="width: 150px; height: 150px; object-fit: contain; border-radius: 20px; background: #fff; padding: 10px; margin-bottom: 20px;">
-                <h2 id="p-name" style="font-size: 24px; font-weight: 800;">Nume Produs</h2>
-                <p id="p-brand" style="color: var(--p-green); font-weight: 600; margin-top: 5px;">Brand</p>
-            </div>
+    <div id="view-history" class="view">
+        <h2 data-i18n="nav_history">Istoric</h2>
+        <div id="history-list" style="margin-top:20px;"></div>
+    </div>
 
-            <div id="p-score-badge" class="score-circle">?</div>
+    <div id="view-favorites" class="view">
+        <h2 data-i18n="nav_fav">Favorite</h2>
+        <div id="fav-list" style="margin-top:20px;"></div>
+    </div>
+
+    <div id="view-guide" class="view">
+        <h2 data-i18n="nav_guide">Ghid</h2>
+        <div class="card" style="margin-top:20px;">
+            <h3 data-i18n="guide_q1">🔍 Cum scanezi?</h3>
+            <p data-i18n="guide_a1" style="color:#94a3b8; font-size:14px; margin-top:5px;">Încadrează codul de bare în centru.</p>
+        </div>
+        <div class="card">
+            <h3 data-i18n="guide_q2">🛡️ Scorul Nutrițional</h3>
+            <p data-i18n="guide_a2">A (Excelent) -> E (Nerecomandat).</p>
+        </div>
+    </div>
+
+    <div id="view-settings" class="view">
+        <h2 data-i18n="nav_settings">Setări</h2>
+        <div class="card" style="margin-top:20px;">
+            <p data-i18n="sett_lang">Limbă / Language</p>
+            <select id="lang-select" onchange="updateAppLanguage(this.value)" style="width:100%; background:#1e293b; color:white; padding:12px; border-radius:12px; margin-top:10px; border:none;">
+                <option value="ro">Română</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+            </select>
+        </div>
+        <button class="card" onclick="toggleTheme()" style="width:100%; text-align:center; cursor:pointer; color:inherit;">🌓 Toggle Dark/Light Mode</button>
+        <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+            <span data-i18n="sett_child">👶 Mod Copii</span>
+            <input type="checkbox" id="child-mode" onchange="refreshCurrentProduct()">
+        </div>
+    </div>
+
+    <div id="sheet">
+        <div style="width:40px; height:4px; background:grey; margin:0 auto 20px; border-radius:2px;" onclick="closeProductSheet()"></div>
+        <div id="product-data">
+            <div style="text-align:center;">
+                <img id="p-img" src="" style="width:130px; height:130px; object-fit:contain; background:white; border-radius:20px; padding:10px;">
+                <h2 id="p-name" style="margin-top:15px; font-size:24px;">-</h2>
+                <p id="p-brand" style="color:var(--p-green); font-weight:600;">-</p>
+                <div id="p-score-badge" class="score-badge">?</div>
+                <p id="p-desc" style="font-weight:600; margin-top:10px;">-</p>
+            </div>
             
-            <div id="p-warning" class="warning-box">
-                <span style="font-size: 24px;">⚠️</span>
-                <p id="p-warning-text" style="font-size: 14px; font-weight: 600;">Analiză în curs...</p>
+            <div id="p-alert-box" class="card" style="background:rgba(239, 68, 68, 0.1); border:1px solid var(--p-red); display:none; text-align:center;">
+                <p id="p-alert-msg" style="color:var(--p-red); font-weight:700;"></p>
             </div>
 
-            <div class="grid-info">
-                <div class="info-card"><span>Zaharuri</span><strong id="v-sugar">-</strong></div>
-                <div class="info-card"><span>Sare</span><strong id="v-salt">-</strong></div>
-                <div class="info-card"><span>Grăsimi</span><strong id="v-fat">-</strong></div>
-                <div class="info-card"><span>E-uri</span><strong id="v-additives">-</strong></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:20px 0;">
+                <div class="card"><span data-i18n="nutri_sugar">Zahăr</span><br><b id="v-sugar">-</b></div>
+                <div class="card"><span data-i18n="nutri_salt">Sare</span><br><b id="v-salt">-</b></div>
             </div>
 
-            <div style="margin-top: 30px;">
-                <h4 style="margin-bottom: 10px; font-size: 14px; color: #94a3b8;">INGREDIENTE</h4>
-                <p id="p-ingred" style="font-size: 13px; line-height: 1.6; color: #cbd5e1;"></p>
+            <div class="card">
+                <p style="margin-bottom:8px; font-weight:600;" data-i18n="nutri_adds">Aditivi</p>
+                <div id="p-additives-list"></div>
             </div>
 
-            <button onclick="closeSheet()" style="width:100%; padding: 18px; border-radius: 20px; border: none; background: var(--p-green); color: white; font-weight: 800; margin-top: 30px; box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);">SCANARE NOUĂ</button>
+            <p id="p-ingredients-text" style="font-size:12px; color:#94a3b8; line-height:1.6; padding:0 10px;"></p>
+            
+            <button class="btn-p" id="save-fav-btn" onclick="addToFavorites()" data-i18n="btn_save">Salvează la Favorite</button>
         </div>
     </div>
+
+    <nav class="nav">
+        <button class="nav-item" onclick="switchView('history', this)"><span>🕒</span><span data-i18n="nav_history">Istoric</span></button>
+        <button class="nav-item" onclick="switchView('favorites', this)"><span>❤️</span><span data-i18n="nav_fav">Favs</span></button>
+        <button class="nav-item active" onclick="switchView('scanner', this)"><div class="scan-circle">📷</div></button>
+        <button class="nav-item" onclick="switchView('guide', this)"><span>📖</span><span data-i18n="nav_guide">Ghid</span></button>
+        <button class="nav-item" onclick="switchView('settings', this)"><span>⚙️</span><span data-i18n="nav_settings">Setări</span></button>
+    </nav>
 
     <script>
-        const codeReader = new ZXing.BrowserMultiFormatReader();
-        let isScanning = false;
+        // --- 1. CONFIG & TRANSLATIONS ---
+        const LANGUAGES = {
+            ro: { app_name: "SafeFood Pro", nav_history: "Istoric", nav_fav: "Favorite", nav_guide: "Ghid", nav_settings: "Setări", sett_lang: "Limbă", sett_child: "Mod Copii", nutri_sugar: "Zahăr", nutri_salt: "Sare", nutri_adds: "Aditivi", btn_save: "Salvează", sugar_alert: "Zahăr Ridicat!", child_ok: "E bun pentru tine! 😊", child_no: "Nu e prea sănătos. 🛑", guide_q1: "Cum scanezi?", guide_a1: "Încadrează codul în centru.", guide_q2: "Scorul", guide_a2: "De la A la E." },
+            en: { app_name: "SafeFood Pro", nav_history: "History", nav_fav: "Favs", nav_guide: "Guide", nav_settings: "Settings", sett_lang: "Language", sett_child: "Child Mode", nutri_sugar: "Sugar", nutri_salt: "Salt", nutri_adds: "Additives", btn_save: "Save", sugar_alert: "High Sugar!", child_ok: "Good for you! 😊", child_no: "Not healthy. 🛑", guide_q1: "How to scan?", guide_a1: "Center the barcode.", guide_q2: "The Score", guide_a2: "From A to E." },
+            fr: { app_name: "SafeFood Pro", nav_history: "Histoire", nav_fav: "Favoris", nav_guide: "Guide", nav_settings: "Réglages", sett_lang: "Langue", sett_child: "Mode Enfant", nutri_sugar: "Sucre", nutri_salt: "Sel", nutri_adds: "Additifs", btn_save: "Enregistrer", sugar_alert: "Sucre Élevé!", child_ok: "C'est bon! 😊", child_no: "Pas sain. 🛑", guide_q1: "Comment?", guide_a1: "Cadrez le code.", guide_q2: "Le Score", guide_a2: "De A à E." },
+            de: { app_name: "SafeFood Pro", nav_history: "Verlauf", nav_fav: "Favoriten", nav_guide: "Guide", nav_settings: "Optionen", sett_lang: "Sprache", sett_child: "Kinder Modus", nutri_sugar: "Zucker", nutri_salt: "Salz", nutri_adds: "Zusatzstoffe", btn_save: "Speichern", sugar_alert: "Hoher Zucker!", child_ok: "Gut für dich! 😊", child_no: "Nicht gesund. 🛑", guide_q1: "Wie?", guide_a1: "Code zentrieren.", guide_q2: "Der Score", guide_a2: "A bis E." },
+            zh: { app_name: "SafeFood Pro", nav_history: "历史", nav_fav: "收藏", nav_guide: "指南", nav_settings: "设置", sett_lang: "语言", sett_child: "儿童模式", nutri_sugar: "糖", nutri_salt: "盐", nutri_adds: "添加剂", btn_save: "保存", sugar_alert: "高糖警告!", child_ok: "对你有好处! 😊", child_no: "不健康. 🛑", guide_q1: "如何扫描?", guide_a1: "居中条形码.", guide_q2: "评分", guide_a2: "从 A 到 E." }
+        };
 
-        function startApp() {
-            document.getElementById('splash').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('splash').style.display = 'none';
-                document.getElementById('app').classList.add('active');
-                initCamera();
-            }, 600);
+        const E_CODES = { 'e120': 'Carmin', 'e621': 'Glutamat', 'e250': 'Nitrit', 'e951': 'Aspartam', 'e330': 'Acid Citric', 'e102': 'Tartrazină' };
+
+        let state = {
+            currentLang: 'ro',
+            history: JSON.parse(localStorage.getItem('sf_hist') || '[]'),
+            favorites: JSON.parse(localStorage.getItem('sf_favs') || '[]'),
+            lastProduct: null,
+            isScanning: false
+        };
+
+        const codeReader = new ZXing.BrowserMultiFormatReader();
+
+        // --- 2. NAVIGATION & UI ---
+        function switchView(viewId, element) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(v => v.classList.remove('active'));
+            
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            if(element) element.classList.add('active');
+
+            if(viewId === 'history') renderListData('history-list', state.history);
+            if(viewId === 'favorites') renderListData('fav-list', state.favorites);
         }
 
-        async function initCamera() {
+        function updateAppLanguage(lang) {
+            state.currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(LANGUAGES[lang][key]) el.textContent = LANGUAGES[lang][key];
+            });
+            if(state.lastProduct) renderProductDetails(state.lastProduct);
+        }
+
+        // --- 3. SCANNER ENGINE ---
+        async function startApp() {
             try {
-                const videoInputDevices = await codeReader.listVideoInputDevices();
-                const selectedDeviceId = videoInputDevices[0].deviceId;
-                
-                codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-                    if (result && !isScanning) {
-                        isScanning = true;
-                        handleProductFound(result.text);
+                const devices = await codeReader.listVideoInputDevices();
+                codeReader.decodeFromVideoDevice(devices[0].deviceId, 'video', (result) => {
+                    if (result && !document.getElementById('sheet').classList.contains('open')) {
+                        handleScanSuccess(result.text);
                     }
                 });
-            } catch (err) {
-                alert("Eroare Camera: Te rugăm să permiți accesul.");
-            }
+            } catch (e) { console.error("Camera Error", e); }
         }
 
-        async function handleProductFound(barcode) {
-            // Feedback Haptic & Sound
-            window.navigator.vibrate?.(150);
-            playSuccessSound();
-
+        async function handleScanSuccess(barcode) {
+            window.navigator.vibrate?.(100);
             try {
                 const res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
                 const data = await res.json();
-
-                if (data.status === 1) {
-                    displayProduct(data.product);
-                } else {
-                    alert("Produsul nu a fost găsit.");
-                    isScanning = false;
-                }
-            } catch (e) {
-                alert("Eroare conexiune baza de date.");
-                isScanning = false;
-            }
+                if(data.status === 1) renderProductDetails(data.product);
+                else alert("Produsul nu a fost găsit.");
+            } catch (e) { alert("Eroare de conexiune."); }
         }
 
-        function displayProduct(p) {
-            document.getElementById('p-name').textContent = p.product_name || 'Produs fără nume';
-            document.getElementById('p-brand').textContent = p.brands || 'Brand generic';
-            document.getElementById('p-img').src = p.image_url || 'https://via.placeholder.com/200';
+        function renderProductDetails(p) {
+            state.lastProduct = p;
+            const lang = state.currentLang;
+            const isChild = document.getElementById('child-mode').checked;
+
+            document.getElementById('p-name').textContent = p.product_name || 'N/A';
+            document.getElementById('p-brand').textContent = p.brands || '-';
+            document.getElementById('p-img').src = p.image_url || '';
             
-            // Nutriscore
             const score = (p.nutriscore_grade || 'c').toUpperCase();
             const badge = document.getElementById('p-score-badge');
-            badge.className = `score-circle score-${score}`;
-            badge.textContent = score;
+            badge.textContent = score; badge.className = `score-badge sc-${score}`;
 
-            // Warning Logic (Simulată din Date)
+            // Logic for Child Mode / Adult Mode
+            document.getElementById('p-desc').textContent = isChild ? (['A','B'].includes(score) ? LANGUAGES[lang].child_ok : LANGUAGES[lang].child_no) : "Analiză finalizată.";
+
+            // Nutrient Info
             const sugar = p.nutriments?.sugars_100g || 0;
-            const warningText = document.getElementById('p-warning-text');
-            const warningBox = document.getElementById('p-warning');
+            document.getElementById('v-sugar').textContent = sugar.toFixed(1) + "g";
+            document.getElementById('v-salt').textContent = (p.nutriments?.salt_100g || 0).toFixed(1) + "g";
 
-            if (sugar > 20) {
-                warningText.textContent = "Zahăr Ridicat: Risc de diabet și obezitate.";
-                warningBox.style.display = 'flex';
-            } else if (score === 'A' || score === 'B') {
-                warningText.textContent = "Alegere excelentă: Produs nutritiv și sigur.";
-                warningBox.style.borderColor = "#2ecc71";
-                warningBox.style.background = "rgba(46, 204, 113, 0.1)";
-            } else {
-                warningText.textContent = "Consumă cu moderație.";
-                warningBox.style.borderColor = "#ca8a04";
-                warningBox.style.background = "rgba(202, 138, 4, 0.1)";
+            const alertBox = document.getElementById('p-alert-box');
+            if(sugar > 15) {
+                alertBox.style.display = 'block';
+                document.getElementById('p-alert-msg').textContent = LANGUAGES[lang].sugar_alert;
+            } else alertBox.style.display = 'none';
+
+            // Additives
+            const adds = p.additives_tags || [];
+            document.getElementById('p-additives-list').innerHTML = adds.map(a => {
+                const key = a.replace('en:', '');
+                return `<span class="tag">${E_CODES[key] || key.toUpperCase()}</span>`;
+            }).join('');
+
+            document.getElementById('p-ingredients-text').textContent = p.ingredients_text_ro || p.ingredients_text || "";
+            
+            // Save to History
+            if(!state.history.find(x => x.id === p._id)) {
+                state.history.unshift({ id: p._id, name: p.product_name, score: score, img: p.image_url });
+                state.history = state.history.slice(0, 20);
+                localStorage.setItem('sf_hist', JSON.stringify(state.history));
             }
 
-            // Stats
-            document.getElementById('v-sugar').textContent = sugar + "g";
-            document.getElementById('v-salt').textContent = (p.nutriments?.salt_100g || 0) + "g";
-            document.getElementById('v-fat').textContent = (p.nutriments?.fat_100g || 0) + "g";
-            document.getElementById('v-additives').textContent = p.additives_n || 0;
-            document.getElementById('p-ingred').textContent = p.ingredients_text_ro || p.ingredients_text || "Ingrediente necompletate.";
-
-            document.getElementById('product-sheet').classList.add('open');
+            document.getElementById('sheet').classList.add('open');
         }
 
-        function closeSheet() {
-            document.getElementById('product-sheet').classList.remove('open');
-            setTimeout(() => { isScanning = false; }, 500);
+        // --- 4. PERSISTENCE ---
+        function addToFavorites() {
+            if(!currentProductAlreadyInFavs()) {
+                state.favorites.push({ id: state.lastProduct._id, name: state.lastProduct.product_name, img: state.lastProduct.image_url });
+                localStorage.setItem('sf_favs', JSON.stringify(state.favorites));
+                alert("Salvat!");
+            }
         }
 
-        function playSuccessSound() {
-            const context = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = context.createOscillator();
-            const gain = context.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, context.currentTime);
-            gain.gain.setValueAtTime(0.1, context.currentTime);
-            osc.connect(gain);
-            gain.connect(context.destination);
-            osc.start();
-            osc.stop(context.currentTime + 0.1);
+        function currentProductAlreadyInFavs() {
+            return state.favorites.some(f => f.id === state.lastProduct._id);
         }
+
+        function renderListData(id, data) {
+            document.getElementById(id).innerHTML = data.map(i => `
+                <div class="card" style="display:flex; align-items:center; gap:15px;">
+                    <img src="${i.img}" style="width:40px; height:40px; background:white; border-radius:8px; object-fit:contain;">
+                    <div style="flex:1"><b>${i.name || 'Produs'}</b></div>
+                    ${i.score ? `<span class="tag sc-${i.score}">${i.score}</span>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+        }
+
+        function closeProductSheet() { document.getElementById('sheet').classList.remove('open'); }
+        function refreshCurrentProduct() { if(state.lastProduct) renderProductDetails(state.lastProduct); }
+
+        // Start
+        window.addEventListener('load', () => {
+            updateAppLanguage('ro');
+            startApp();
+        });
     </script>
 </body>
 </html>
